@@ -23,56 +23,96 @@ function Cart() {
   async function checkout(id) {
 
     await checkoutOrder(id);
-    alert('Order placed successfully!');
 
     loadCart();
   }
 
   return (
+
     <div className="page">
 
-      <h1>Your Food Cart</h1>
-      <p style={{ marginBottom: '20px'}}>
-        Review your recommendations before checkout.
-        </p>
+      <h1>
+        Your Food Cart
+      </h1>
 
-      {items.length === 0 && (
-        <p>No items in cart.</p>
-      )}
+      {
 
-      {items.map(item => (
+        items.length === 0 ?
 
-        <div
-          key={item._id}
-          className="cart-item"
-        >
-          <div>
+        (
 
-            <h3>{item.food}</h3>
+          <p>
+            No items in cart.
+          </p>
 
-            <p>{item.reason}</p>
+        )
 
-          </div>
+        :
 
-          <div>
+        (
 
-            <p>₹{item.price}</p>
+          <table className="cart-table">
 
-            <button
-              onClick={() =>
-                checkout(item._id)
+            <thead>
+
+              <tr>
+
+                <th>Food</th>
+
+                <th>Reason</th>
+
+                <th>Price</th>
+
+                <th>Action</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {
+
+                items.map(item => (
+
+                  <tr key={item._id}>
+
+                    <td>{item.food}</td>
+
+                    <td>{item.reason}</td>
+
+                    <td>₹{item.price}</td>
+
+                    <td>
+
+                      <button
+                        onClick={() =>
+                          checkout(item._id)
+                        }
+                      >
+                        Checkout
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                ))
+
               }
-            >
-              Checkout
-            </button>
 
-          </div>
+            </tbody>
 
-        </div>
+          </table>
 
-      ))}
+        )
+
+      }
+
     </div>
+
   );
+
 }
 
 export default Cart;

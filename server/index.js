@@ -1,3 +1,4 @@
+const {WebSocketServer } = require('ws');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -192,13 +193,70 @@ app.get('/api/cart', async (req, res) => {
     });
   }
 });
+app.get('/api/recent', async (req, res) => {
+
+  try {
+
+    const recent =
+      await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.json(recent);
+
+  } catch {
+
+    res.status(500).json({
+      error: 'Failed'
+    });
+
+  }
+
+});
+app.get('/api/orders', async (req, res) => {
+
+  try {
+
+    const orders =
+      await Order.find({
+        status: 'ordered'
+      })
+      .sort({
+        createdAt: -1
+      });
+
+    res.json(orders);
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: 'Failed to fetch orders'
+    });
+
+  }
+
+});
 
 /*
 ========================
 Checkout Order
 ========================
 */
+function broadcast(data) {
 
+  wss.clients.forEach((client) => {
+
+    if (client.readyState === 1) {
+
+      client.send(
+        JSON.stringify(data)
+      );
+
+    }
+
+  });
+
+}
 app.post('/api/checkout/:id', async (req, res) => {
 
   try {
@@ -216,6 +274,11 @@ app.post('/api/checkout/:id', async (req, res) => {
           new: true
         }
       );
+      broadcast({
+        type: 'ORDER_PLACED',
+        food: updatedOrder.food,
+        orderId: updatedOrder._id
+      });
 
     res.json({
       message: 'Order placed',
@@ -239,7 +302,22 @@ Server Start
 const PORT =
   process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 
   console.log(`Server running on ${PORT}`);
+});
+const wss = new WebSocketServer({
+  server
+});
+
+wss.on('connection', (ws) => {
+
+  console.log('WebSocket client connected');
+
+  ws.send(
+    JSON.stringify({
+      type: 'CONNECTED',
+      message: 'Connected successfully'
+    })
+  );
 });

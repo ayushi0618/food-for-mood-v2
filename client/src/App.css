@@ -28,6 +28,9 @@ a {
 
   position: sticky;
   top: 0;
+  backdrop-filter: blur(12px);
+
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
 
 .logo {
@@ -230,4 +233,325 @@ a {
   display: flex;
   gap: 10px;
   margin-top:18px;
+}
+.notification {
+
+  position: fixed;
+
+  top: 20px;
+
+  right: 20px;
+
+  background: #16a34a;
+
+  color: white;
+
+  padding: 16px 22px;
+
+  border-radius: 12px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
+  z-index: 9999;
+}
+/* Recent Recommendations */
+
+.recent-section {
+
+  padding: 80px 20px;
+
+  text-align: center;
+
+  background: #fafafa;
+}
+
+.recent-section h2 {
+
+  font-size: 2rem;
+
+  margin-bottom: 30px;
+}
+
+.recent-grid {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 20px;
+}
+
+.recent-card {
+
+  width: 280px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  background: white;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  overflow: hidden;
+
+  padding: 12px;
+}
+.recent-card:hover {
+
+  transform: translateY(-6px);
+
+  box-shadow:
+  0 15px 35px rgba(0,0,0,0.12);
+}
+
+.recent-card:hover {
+
+  transform: translateY(-5px);
+}
+
+.recent-card h3 {
+
+  margin-bottom: 10px;
+}
+.orders-page {
+
+  padding: 80px 20px;
+
+  text-align: center;
+}
+
+.orders-grid {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 20px;
+
+  margin-top: 30px;
+}
+
+.order-card {
+
+  width: 250px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  background: white;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.order-card span {
+
+  display: inline-block;
+
+  margin-top: 10px;
+
+  color: green;
+
+  font-weight: 600;
+}
+.cart-table,
+.orders-table {
+
+  width: 90%;
+
+  margin: 40px auto;
+
+  border-collapse: collapse;
+
+  background: white;
+
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.cart-table th,
+.cart-table td,
+.orders-table th,
+.orders-table td {
+
+  padding: 16px;
+
+  border-bottom: 1px solid #eee;
+
+  text-align: left;
+}
+
+.cart-table th,
+.orders-table th {
+
+  background: #f7f7f7;
+}
+.page {
+
+  min-height: 100vh;
+
+  padding: 100px 40px;
+
+  background-image:
+  linear-gradient(
+    rgba(255,255,255,0.82),
+    rgba(255,255,255,0.82)
+  ),
+  url("https://images.unsplash.com/photo-1515003197210-e0cd71810b5f");
+
+  background-size: cover;
+
+  background-position: center;
+}
+
+.cart-table,
+.orders-table {
+
+  width: 95%;
+
+  max-width: 1100px;
+
+  margin: auto;
+
+  border-collapse: collapse;
+
+  background: white;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.cart-table th,
+.orders-table th {
+
+  background: #f3f4f6;
+
+  padding: 18px;
+
+  text-align: left;
+}
+
+.cart-table td,
+.orders-table td {
+
+  padding: 18px;
+
+  border-bottom: 1px solid #ececec;
+}
+
+.status-success {
+
+  background: #dcfce7;
+
+  color: #166534;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+
+  font-size: 14px;
+}
+.analyze-bg {
+
+  background-image:
+  linear-gradient(
+    rgba(255,255,255,0.75),
+    rgba(255,255,255,0.75)
+  ),
+  url("https://images.unsplash.com/photo-1504674900247-0877df9cc836");
+
+  background-size: cover;
+
+  background-position: center;
+
+  padding: 40px 0;
+}
+
+.about-bg {
+
+  background-image:
+  linear-gradient(
+    rgba(255,255,255,0.75),
+    rgba(255,255,255,0.75)
+  ),
+  url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0");
+
+  background-size: cover;
+
+  background-position: center;
+
+  padding: 40px 0;
+}
+
+.testimonial-bg {
+
+  background-image:
+  linear-gradient(
+    rgba(255,255,255,0.75),
+    rgba(255,255,255,0.75)
+  ),
+  url("https://images.unsplash.com/photo-1495474472287-4d71bcdd2085");
+
+  background-size: cover;
+
+  background-position: center;
+
+  padding: 40px 0;
+}
+.cart-table button,
+.cart-item button {
+
+  background: #ff6b35;
+  color: white;
+
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+.cart-table button:hover,
+.cart-item button:hover {
+
+  background: #e85d2a;
+
+  transform: translateY(-2px);
+}
+.recent-image{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+
+.recent-card{
+  overflow:hidden;
+}
+
+.recent-card h3{
+  margin-top:8px;
 }
