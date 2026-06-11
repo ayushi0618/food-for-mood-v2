@@ -17,7 +17,7 @@ function App() {
 
     const socket =
       new WebSocket(
-        'ws://localhost:5000'
+        'wss://food-for-mood-v2.onrender.com'
       );
 
     socket.onmessage = (event) => {
