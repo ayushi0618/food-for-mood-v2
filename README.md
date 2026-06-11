@@ -1,26 +1,29 @@
-# Food for Mood AI V2
+# Food For Mood AI
 
-> AI-powered comfort food recommender that understands your situation and lets you order instantly.
+AI-powered comfort food recommendation system.
 
+## Features
 
-This project demonstrates LLM inference + real-time distributed systems + full-stack development
+- Gemini AI recommendations
+- MongoDB storage
+- React frontend
+- Express backend
+- Real-time notifications using WebSockets
+- Cart and checkout system
 
-**Live Demo**: Coming soon 
-**Tech Stack**: Node.js, Express, MongoDB, Google Gemini API, WebSockets
+## Tech Stack
 
-### Features
-1. **Incident Analysis**: User types any life event → Gemini 1.5 Flash returns personalized food JSON
-2. **E-commerce Flow**: Add AI suggestion to cart → Checkout → Order tracking
-3. **Real-time Updates**: WebSockets push order status to all clients
-4. **Performance**: Latency tracking, caching strategy, error fallbacks for LLM API
+React
+Node.js
+Express
+MongoDB
+Gemini API
+WebSocket
 
-### System Design
-React Client → Node.js API → Gemini API
-                  ↓
-               MongoDB ← WebSocket broadcast
+## Live Demo
 
-### Run Locally
-1. `cd server && npm install`
-2. Add `.env`: `GEMINI_API_KEY=xxx` and `MONGO_URI=xxx`
-3. `npm run dev` → API on `localhost:5000`
+Frontend:
+https://food-for-mood-v2.vercel.app
 
+Backend:
+https://food-for-mood-v2.onrender.com
