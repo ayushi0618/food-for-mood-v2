@@ -295,6 +295,92 @@ app.post('/api/checkout/:id', async (req, res) => {
 
 /*
 ========================
+Add to Cart (direct)
+========================
+Lets the menu / re-order flows add a dish to the cart without going
+through /api/analyze. Purely additive — existing routes untouched.
+*/
+
+app.post('/api/cart', async (req, res) => {
+
+  try {
+
+    const { food, reason, price, incident } = req.body;
+
+    if (!food) {
+      return res.status(400).json({
+        error: 'Food required'
+      });
+    }
+
+    const newOrder = new Order({
+
+      incident: incident || '',
+
+      food,
+
+      reason: reason || '',
+
+      price: Number(price) || 0,
+
+      status: 'cart'
+
+    });
+
+    await newOrder.save();
+
+    res.status(201).json(newOrder);
+
+  } catch (error) {
+
+    console.error('Add to Cart Error:', error);
+
+    res.status(500).json({
+      error: 'Failed to add to cart'
+    });
+  }
+});
+
+/*
+========================
+Remove from Cart
+========================
+*/
+
+app.delete('/api/cart/:id', async (req, res) => {
+
+  try {
+
+    const removed = await Order.findOneAndDelete({
+
+      _id: req.params.id,
+
+      status: 'cart'
+
+    });
+
+    if (!removed) {
+      return res.status(404).json({
+        error: 'Cart item not found'
+      });
+    }
+
+    res.json({
+      message: 'Removed from cart'
+    });
+
+  } catch (error) {
+
+    console.error('Remove from Cart Error:', error);
+
+    res.status(500).json({
+      error: 'Failed to remove from cart'
+    });
+  }
+});
+
+/*
+========================
 Server Start
 ========================
 */

@@ -1,13 +1,55 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Warm, appetizing, professional palette */
+  --cream: #FDF9F3;
+  --cream-2: #F8F0E4;
+  --cream-3: #F3E8D5;
+  --card: #FFFFFF;
+  --ink: #2E1F16;
+  --ink-soft: #4A382A;
+  --muted: #8A7561;
+  --line: #EBDFCE;
+  --terra: #C2571B;
+  --terra-dark: #9C4313;
+  --terra-soft: #F9E8D9;
+  --basil: #5F8D4E;
+  --basil-dark: #476B3A;
+  --basil-soft: #E7F0E1;
+  --gold: #D9A441;
+  --gold-soft: #FAF0DA;
+  --rose: #C0495B;
+  --rose-soft: #F9E4E8;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 10px 30px rgba(46, 31, 22, 0.08);
+  --shadow-lg: 0 24px 60px rgba(46, 31, 22, 0.14);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, 'Segoe UI', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; }
+
+::selection { background: var(--terra-soft); }
+
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
