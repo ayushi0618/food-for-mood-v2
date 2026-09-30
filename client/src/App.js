@@ -15,9 +15,11 @@ function App() {
 
   useEffect(() => {
 
+    // Set REACT_APP_WS_URL in your hosting env to point at the backend.
+    // Falls back to the production Render backend so deploys keep working.
     const socket =
       new WebSocket(
-        'wss://food-for-mood-v2.onrender.com'
+        process.env.REACT_APP_WS_URL || 'wss://food-for-mood-v2.onrender.com'
       );
 
     socket.onmessage = (event) => {
