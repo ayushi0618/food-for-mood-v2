@@ -59,3 +59,10 @@ export async function addToCart({ food, reason, price, incident }) {
 export async function removeFromCart(id) {
   return request(`/api/cart/${id}`, { method: 'DELETE' });
 }
+
+export async function getInsightSummary(payload) {
+  return request('/api/insight-summary', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}

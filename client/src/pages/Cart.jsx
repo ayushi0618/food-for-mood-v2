@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Trash2, ArrowRight, Loader2 } from 'lucide-react';
+import { ShoppingBag, Trash2, ArrowRight, Loader2, Tag, MapPin, Plus, X } from 'lucide-react';
 import {
   getCart,
   checkoutOrder,
   removeFromCart,
   notifyCartUpdated,
 } from '../services/api';
+import { getAddresses, saveAddress, deleteAddress } from '../services/store';
+import { findOffer, evaluateOffer } from '../data/offers';
 import { useToast } from '../toast';
 import foodImages from '../data/foodImages';
 import { imgFallback, dishImage } from '../utils/img';
@@ -16,6 +18,13 @@ function Cart() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
+  const [promoInput, setPromoInput] = useState('');
+  const [promo, setPromo] = useState(null);
+  const [promoError, setPromoError] = useState('');
+  const [addresses, setAddresses] = useState(() => getAddresses());
+  const [addressId, setAddressId] = useState(null);
+  const [showAddrForm, setShowAddrForm] = useState(false);
+  const [addrForm, setAddrForm] = useState({ label: 'Home', line: '', city: '', pin: '' });
   const pushToast = useToast();
 
   async function loadCart() {
@@ -80,7 +89,47 @@ function Cart() {
   }
 
   const subtotal = items.reduce((s, i) => s + (Number(i.price) || 0), 0);
-  const delivery = items.length ? 29 : 0;
+  const offerResult = evaluateOffer(promo, subtotal);
+  const delivery = items.length ? (offerResult.freeShip ? 0 : 29) : 0;
+  const discount = offerResult.discount;
+  const total = Math.max(0, subtotal - discount + delivery);
+
+  function applyPromo() {
+    const offer = findOffer(promoInput);
+    if (!offer) {
+      setPromo(null);
+      setPromoError('That code did not match any offer.');
+      return;
+    }
+    const res = evaluateOffer(offer, subtotal);
+    if (res.error) {
+      setPromo(null);
+      setPromoError(res.error);
+      return;
+    }
+    setPromo(offer);
+    setPromoError('');
+    pushToast('Offer applied', `${offer.code} — ${offer.title}.`);
+  }
+
+  function addAddress(e) {
+    e.preventDefault();
+    if (!addrForm.line.trim() || !addrForm.city.trim()) {
+      pushToast('Address incomplete', 'Add a street and city.');
+      return;
+    }
+    const saved = saveAddress({
+      label: addrForm.label.trim() || 'Home',
+      line: addrForm.line.trim(),
+      city: addrForm.city.trim(),
+      pin: addrForm.pin.trim(),
+    });
+    setAddresses(getAddresses());
+    setAddressId(saved.id);
+    setShowAddrForm(false);
+    setAddrForm({ label: 'Home', line: '', city: '', pin: '' });
+    pushToast('Address saved', 'Delivering here for this order.');
+  }
 
   return (
     <div className="page">
@@ -152,17 +201,131 @@ function Cart() {
 
           <div className="summary-card">
             <h3>Order summary</h3>
+
+            <div className="promo-box">
+              {promo ? (
+                <div className="promo-applied">
+                  <span className="promo-tag">
+                    <Tag size={13} /> {promo.code}
+                  </span>
+                  <span className="promo-title">{promo.title}</span>
+                  <button
+                    className="icon-btn"
+                    onClick={() => { setPromo(null); setPromoInput(''); }}
+                    title="Remove offer"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="promo-row">
+                    <input
+                      value={promoInput}
+                      onChange={(e) => setPromoInput(e.target.value)}
+                      placeholder="Promo code (try MOOD20)"
+                      aria-label="Promo code"
+                    />
+                    <button className="btn btn-ghost btn-sm" onClick={applyPromo}>
+                      Apply
+                    </button>
+                  </div>
+                  {promoError && <p className="promo-error">{promoError}</p>}
+                </>
+              )}
+            </div>
+
+            <div className="addr-box">
+              <div className="addr-head">
+                <span><MapPin size={15} /> Deliver to</span>
+                <button
+                  className="link-btn"
+                  onClick={() => setShowAddrForm((v) => !v)}
+                >
+                  <Plus size={13} /> {addresses.length ? 'New' : 'Add address'}
+                </button>
+              </div>
+              {addresses.length > 0 && !showAddrForm && (
+                <div className="addr-list">
+                  {addresses.map((a) => (
+                    <label key={a.id} className={`addr-opt ${addressId === a.id ? 'on' : ''}`}>
+                      <input
+                        type="radio"
+                        name="address"
+                        checked={addressId === a.id}
+                        onChange={() => setAddressId(a.id)}
+                      />
+                      <span>
+                        <b>{a.label}</b> — {a.line}, {a.city}{a.pin ? ` ${a.pin}` : ''}
+                      </span>
+                      <button
+                        className="icon-btn"
+                        title="Delete address"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          deleteAddress(a.id);
+                          setAddresses(getAddresses());
+                          if (addressId === a.id) setAddressId(null);
+                        }}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </label>
+                  ))}
+                </div>
+              )}
+              {showAddrForm && (
+                <form className="addr-form" onSubmit={addAddress}>
+                  <div className="addr-grid">
+                    <input
+                      value={addrForm.label}
+                      onChange={(e) => setAddrForm({ ...addrForm, label: e.target.value })}
+                      placeholder="Label (Home / Work)"
+                    />
+                    <input
+                      value={addrForm.pin}
+                      onChange={(e) => setAddrForm({ ...addrForm, pin: e.target.value })}
+                      placeholder="PIN code"
+                      inputMode="numeric"
+                    />
+                  </div>
+                  <input
+                    value={addrForm.line}
+                    onChange={(e) => setAddrForm({ ...addrForm, line: e.target.value })}
+                    placeholder="Street, area, landmark"
+                  />
+                  <input
+                    value={addrForm.city}
+                    onChange={(e) => setAddrForm({ ...addrForm, city: e.target.value })}
+                    placeholder="City"
+                  />
+                  <button className="btn btn-ghost btn-sm" type="submit">
+                    Save address
+                  </button>
+                </form>
+              )}
+              {addresses.length === 0 && !showAddrForm && (
+                <p className="addr-empty">No saved addresses yet.</p>
+              )}
+            </div>
+
             <div className="sum-row">
               <span>Subtotal ({items.length} item{items.length === 1 ? '' : 's'})</span>
               <span>₹{subtotal}</span>
             </div>
+            {discount > 0 && (
+              <div className="sum-row discount">
+                <span>Offer ({promo.code})</span>
+                <span>− ₹{discount}</span>
+              </div>
+            )}
             <div className="sum-row">
               <span>Delivery</span>
-              <span>₹{delivery}</span>
+              <span>{delivery === 0 ? 'FREE' : `₹${delivery}`}</span>
             </div>
             <div className="sum-row total">
               <span>Total</span>
-              <span>₹{subtotal + delivery}</span>
+              <span>₹{total}</span>
             </div>
             <button
               className="btn btn-primary btn-block"

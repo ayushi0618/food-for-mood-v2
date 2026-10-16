@@ -7,6 +7,8 @@ import {
   Flame,
   Trash2,
   ArrowRight,
+  Sparkles,
+  Loader2,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -24,7 +26,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { getOrders } from '../services/api';
+import { getOrders, getInsightSummary } from '../services/api';
 import { getJournal, clearJournal } from '../services/store';
 import { moodColor } from '../utils/mood';
 import KpiTile from '../components/KpiTile';
@@ -40,6 +42,9 @@ function dayKey(ts) {
 function Insights() {
   const [journal, setJournal] = useState(() => getJournal());
   const [orders, setOrders] = useState([]);
+  const [aiSummary, setAiSummary] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiFresh, setAiFresh] = useState(false);
 
   useEffect(() => {
     getOrders()
@@ -143,6 +148,25 @@ function Insights() {
     }
   };
 
+  async function fetchAiSummary() {
+    setAiLoading(true);
+    try {
+      const data = await getInsightSummary({
+        checkins: stats.checkins,
+        topMoods: moodData.slice(0, 3).map((m) => m.mood),
+        topDishes: dishData.slice(0, 3).map((d) => d.name),
+        spend: stats.spend,
+        streak: stats.streak,
+      });
+      setAiSummary(data.summary || '');
+      setAiFresh(!!data.ai);
+    } catch {
+      setAiSummary('The AI coach is taking a break — your charts below still tell the story.');
+      setAiFresh(false);
+    }
+    setAiLoading(false);
+  }
+
   return (
     <div className="page">
       <div className="page-head">
@@ -165,6 +189,38 @@ function Insights() {
             delay={i * 90}
           />
         ))}
+      </div>
+
+      <div className="panel ai-summary-panel" style={{ marginBottom: 18 }}>
+        <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+          <span className="kpi-icon" style={{ background: 'linear-gradient(135deg,#C2571B,#9C4313)', flex: 'none' }}>
+            <Sparkles size={22} />
+          </span>
+          <div style={{ flex: 1 }}>
+            <h3 style={{ margin: '0 0 4px' }}>AI coach take</h3>
+            {aiLoading ? (
+              <p className="panel-sub" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Loader2 size={15} className="spinner" /> Reading your patterns…
+              </p>
+            ) : aiSummary ? (
+              <>
+                <p style={{ margin: '0 0 4px', fontSize: '0.95rem', lineHeight: 1.6 }}>{aiSummary}</p>
+                {!aiFresh && (
+                  <p className="panel-sub" style={{ margin: 0, fontSize: '0.75rem' }}>Offline summary</p>
+                )}
+              </>
+            ) : (
+              <p className="panel-sub" style={{ margin: '0 0 10px' }}>
+                Get a personal read on your cravings, written by Gemini from your stats above.
+              </p>
+            )}
+            {!aiLoading && (
+              <button className="btn btn-primary btn-sm" onClick={fetchAiSummary} style={{ marginTop: aiSummary ? 8 : 0 }}>
+                <Sparkles size={14} /> {aiSummary ? 'Refresh take' : 'Generate my take'}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {journal.length === 0 ? (
@@ -295,7 +351,11 @@ function Insights() {
                   <XAxis dataKey="mood" tick={{ fontSize: 11 }} stroke="#8A7561" />
                   <YAxis allowDecimals={false} tick={{ fontSize: 11 }} stroke="#8A7561" />
                   <Tooltip cursor={{ fill: '#F8F0E4' }} />
-                  <Bar dataKey="count" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="count" radius={[8, 8, 0, 0]}>
+                    {moodData.map((d) => (
+                      <Cell key={d.mood} fill={d.fill} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>

@@ -1,12 +1,26 @@
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 import MenuItemCard from '../components/MenuItemCard';
 import CuisineChips from '../components/CuisineChips';
+import OffersMarquee from '../components/OffersMarquee';
 import { useToast } from '../toast';
 import DISHES from '../data/dishes';
-import { getPreferences } from '../services/store';
+import { getPreferences, getJournal } from '../services/store';
+import { MOOD_LIST } from '../utils/mood';
 
 const CUISINES = [...new Set(DISHES.map((d) => d.cuisine))];
+
+function topMoodId() {
+  const journal = getJournal();
+  if (!journal.length) return null;
+  const counts = {};
+  journal.forEach((j) => {
+    counts[j.mood] = (counts[j.mood] || 0) + 1;
+  });
+  const topLabel = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+  const found = MOOD_LIST.find((m) => m.label === topLabel);
+  return found ? { id: found.id, label: found.label, color: found.color } : null;
+}
 
 function Menu() {
   const pushToast = useToast();
@@ -14,8 +28,14 @@ function Menu() {
   const [query, setQuery] = useState('');
   const [diet, setDiet] = useState(prefs.diet); // 'any' | 'veg' | 'nonveg'
   const [spice, setSpice] = useState('any'); // 'any' | '1' | '2' | '3'
-  const [sort, setSort] = useState('popular'); // 'popular' | 'price-low' | 'price-high'
+  const [sort, setSort] = useState('popular'); // 'popular' | 'price-low' | 'price-high' | 'rating'
   const [cuisines, setCuisines] = useState([]); // multi-select; empty = all
+  const [moodPick] = useState(() => topMoodId());
+
+  const aiPicks = useMemo(() => {
+    if (!moodPick) return [];
+    return DISHES.filter((d) => (d.moods || []).includes(moodPick.id)).slice(0, 8);
+  }, [moodPick]);
 
   const toggleCuisine = (c) =>
     setCuisines((prev) =>
@@ -39,6 +59,7 @@ function Menu() {
     });
     if (sort === 'price-low') list = [...list].sort((a, b) => a.price - b.price);
     if (sort === 'price-high') list = [...list].sort((a, b) => b.price - a.price);
+    if (sort === 'rating') list = [...list].sort((a, b) => (b.rating || 0) - (a.rating || 0));
     return list;
   }, [query, diet, spice, sort, cuisines]);
 
@@ -48,10 +69,34 @@ function Menu() {
         <span className="eyebrow">Menu</span>
         <h1>Comfort, catalogued</h1>
         <p>
-          {DISHES.length} handpicked Indian comfort dishes. Search, filter by
-          diet and spice, save favorites — or add straight to your cart.
+          {DISHES.length} dishes across {CUISINES.length} cuisines. Search,
+          filter by diet, spice and rating, save favorites — or add straight
+          to your cart.
         </p>
       </div>
+
+      <OffersMarquee />
+
+      {moodPick && aiPicks.length > 0 && (
+        <section className="ai-picks" aria-label="AI picks for your mood">
+          <div className="ai-picks-head">
+            <span className="ai-picks-icon" style={{ background: `${moodPick.color}22`, color: moodPick.color }}>
+              <Sparkles size={18} />
+            </span>
+            <div>
+              <span className="eyebrow">AI picks · because you've been feeling {moodPick.label.toLowerCase()}</span>
+              <h2>Plates that match your week</h2>
+            </div>
+          </div>
+          <div className="ai-picks-row">
+            {aiPicks.map((d) => (
+              <div className="ai-picks-card" key={d.name}>
+                <MenuItemCard dish={d} onToast={(t, b) => pushToast(t, b)} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <CuisineChips
         cuisines={CUISINES}
@@ -95,6 +140,7 @@ function Menu() {
         <div className="seg">
           {[
             ['popular', 'Popular'],
+            ['rating', '★ Top rated'],
             ['price-low', '₹ Low → High'],
             ['price-high', '₹ High → Low'],
           ].map(([v, label]) => (
