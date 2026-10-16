@@ -7,6 +7,7 @@ import { analyzeIncident, notifyCartUpdated } from '../services/api';
 import { logJournalEntry } from '../services/store';
 import { detectMood, MOOD_SUGGESTIONS } from '../utils/mood';
 import FoodCard from './FoodCard';
+import MoodPlaylist from './MoodPlaylist';
 import CameraPermissionCard from './CameraPermissionCard';
 import EmojiRating from './EmojiRating';
 import PromptBox from './PromptBox';
@@ -95,15 +96,18 @@ function MoodForm() {
       </div>
 
       {result && (
-        <FoodCard
-          food={result}
-          mood={mood}
-          onNew={() => {
-            setResult(null);
-            setIncident('');
-            setPhoto(null);
-          }}
-        />
+        <>
+          <FoodCard
+            food={result}
+            mood={mood}
+            onNew={() => {
+              setResult(null);
+              setIncident('');
+              setPhoto(null);
+            }}
+          />
+          <MoodPlaylist moodId={mood?.id} moodLabel={mood?.label} />
+        </>
       )}
     </section>
   );

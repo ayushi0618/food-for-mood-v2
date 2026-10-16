@@ -3,7 +3,7 @@
 // prep time and an animated ADD button — used for the mood-results grid
 // and the Menu page. Wired into the app's cart + favorites services.
 import { useState } from 'react';
-import { Heart, ShoppingBag, Check, Clock, Users } from 'lucide-react';
+import { Heart, ShoppingBag, Check, Clock, Users, Star } from 'lucide-react';
 import { isFavorite, toggleFavorite } from '../services/store';
 import { addToCart, notifyCartUpdated } from '../services/api';
 import { imgFallback } from '../utils/img';
@@ -68,6 +68,14 @@ function MenuItemCard({ dish, onToast }) {
         </div>
 
         <div className="mic21-meta">
+          {dish.rating && (
+            <>
+              <span className={`mic21-rating ${dish.rating >= 4.5 ? 'top' : ''}`}>
+                <Star size={12} fill="currentColor" /> {dish.rating.toFixed(1)}
+              </span>
+              <span className="mic21-dot" />
+            </>
+          )}
           <span className="mic21-meta-item">
             <Users size={13} /> {dish.serves || 'Serves 1'}
           </span>
