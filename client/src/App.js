@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Notification from './components/Notification';
 import { DishHoverRoot } from './components/DishHover';
 import { ToastContext } from './toast';
+import { AuthProvider } from './services/auth';
 import { WS_URL, notifyCartUpdated } from './services/api';
 
 import Home from './pages/Home';
@@ -14,6 +15,7 @@ import Favorites from './pages/Favorites';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Profile from './pages/Profile';
+import Auth from './pages/Auth';
 import './App.css';
 import './twentyfirst.css';
 
@@ -115,6 +117,7 @@ function App() {
 
   return (
     <ToastContext.Provider value={pushToast}>
+      <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
         <Navbar />
@@ -128,9 +131,11 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </ToastContext.Provider>
   );
 }

@@ -87,6 +87,24 @@
 }
 .nav-toggle { display: none; background: none; border: none; color: var(--ink); }
 
+/* ---------- Auth (navbar) ---------- */
+.nav-user {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--terra), var(--terra-dark));
+  color: #fff; font-weight: 800; font-size: 0.85rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.nav-auth-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 15px; border-radius: 999px;
+  font-size: 0.92rem; font-weight: 600; color: var(--ink-soft);
+  background: none; border: none; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.nav-auth-btn:hover { background: var(--cream-2); color: var(--ink); }
+.nav-links a svg, .nav-auth-btn svg { vertical-align: -2px; }
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative; overflow: hidden;
