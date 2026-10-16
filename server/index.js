@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
@@ -10,6 +12,42 @@ const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
+
+const JWT_SECRET = process.env.JWT_SECRET || 'ffm-dev-secret-change-me';
+if (!process.env.JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET not set — using dev fallback. Set JWT_SECRET in production.');
+}
+const signToken = (userId) => jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: '7d' });
+
+// Optional auth: attaches req.userId when a valid Bearer token is present,
+// otherwise continues as guest (req.userId = null). Existing guest behavior
+// is unchanged.
+function optionalAuth(req, res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) {
+    req.userId = null;
+    return next();
+  }
+  try {
+    req.userId = jwt.verify(token, JWT_SECRET).sub;
+  } catch {
+    req.userId = null;
+  }
+  next();
+}
+
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) return res.status(401).json({ error: 'Sign in required' });
+  try {
+    req.userId = jwt.verify(token, JWT_SECRET).sub;
+    next();
+  } catch {
+    return res.status(401).json({ error: 'Session expired — please sign in again' });
+  }
+}
 
 app.use(cors());
 app.use(express.json());
@@ -49,6 +87,12 @@ const orderSchema = new mongoose.Schema({
     default: 'cart'
   },
 
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+
   createdAt: {
     type: Date,
     default: Date.now
@@ -56,6 +100,20 @@ const orderSchema = new mongoose.Schema({
 });
 
 const Order = mongoose.model('Order', orderSchema);
+
+/*
+========================
+User Schema (auth)
+========================
+*/
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true, maxlength: 60 },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  passwordHash: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const User = mongoose.model('User', userSchema);
 
 /*
 ========================
@@ -113,7 +171,7 @@ Analyze Incident
 ========================
 */
 
-app.post('/api/analyze', async (req, res) => {
+app.post('/api/analyze', optionalAuth, async (req, res) => {
 
   const startTime = Date.now();
 
@@ -184,7 +242,9 @@ app.post('/api/analyze', async (req, res) => {
 
       reason: foodData.reason,
 
-      price: foodData.price
+      price: foodData.price,
+
+      userId: req.userId || null
     });
 
     await newOrder.save();
@@ -217,12 +277,13 @@ Get Cart
 ========================
 */
 
-app.get('/api/cart', async (req, res) => {
+app.get('/api/cart', optionalAuth, async (req, res) => {
 
   try {
 
     const cartItems = await Order.find({
-      status: 'cart'
+      status: 'cart',
+      userId: req.userId || null
     }).sort({
       createdAt: -1
     });
@@ -256,13 +317,14 @@ app.get('/api/recent', async (req, res) => {
   }
 
 });
-app.get('/api/orders', async (req, res) => {
+app.get('/api/orders', optionalAuth, async (req, res) => {
 
   try {
 
     const orders =
       await Order.find({
-        status: 'ordered'
+        status: 'ordered',
+        userId: req.userId || null
       })
       .sort({
         createdAt: -1
@@ -300,14 +362,18 @@ function broadcast(data) {
   });
 
 }
-app.post('/api/checkout/:id', async (req, res) => {
+app.post('/api/checkout/:id', optionalAuth, async (req, res) => {
 
   try {
 
     const updatedOrder =
-      await Order.findByIdAndUpdate(
+      await Order.findOneAndUpdate(
 
-        req.params.id,
+        {
+          _id: req.params.id,
+          status: 'cart',
+          userId: req.userId || null
+        },
 
         {
           status: 'ordered'
@@ -317,6 +383,13 @@ app.post('/api/checkout/:id', async (req, res) => {
           new: true
         }
       );
+
+      if (!updatedOrder) {
+        return res.status(404).json({
+          error: 'Order not found in your cart'
+        });
+      }
+
       broadcast({
         type: 'ORDER_PLACED',
         food: updatedOrder.food,
@@ -344,7 +417,7 @@ Lets the menu / re-order flows add a dish to the cart without going
 through /api/analyze. Purely additive — existing routes untouched.
 */
 
-app.post('/api/cart', async (req, res) => {
+app.post('/api/cart', optionalAuth, async (req, res) => {
 
   try {
 
@@ -366,7 +439,9 @@ app.post('/api/cart', async (req, res) => {
 
       price: Number(price) || 0,
 
-      status: 'cart'
+      status: 'cart',
+
+      userId: req.userId || null
 
     });
 
@@ -390,7 +465,7 @@ Remove from Cart
 ========================
 */
 
-app.delete('/api/cart/:id', async (req, res) => {
+app.delete('/api/cart/:id', optionalAuth, async (req, res) => {
 
   try {
 
@@ -398,7 +473,9 @@ app.delete('/api/cart/:id', async (req, res) => {
 
       _id: req.params.id,
 
-      status: 'cart'
+      status: 'cart',
+
+      userId: req.userId || null
 
     });
 
@@ -428,6 +505,76 @@ Server Start
 ========================
 */
 
+
+/*
+========================
+Auth — signup / login / me
+========================
+Real account authentication with bcrypt password hashing and JWT sessions
+(7-day tokens). Purely additive — all existing guest flows keep working.
+*/
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+app.post('/api/auth/signup', async (req, res) => {
+  try {
+    const { name, email, password } = req.body || {};
+    if (!name || !name.trim()) return res.status(400).json({ error: 'Please tell us your name' });
+    if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Please enter a valid email' });
+    if (!password || password.length < 6) return res.status(400).json({ error: 'Password needs at least 6 characters' });
+
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existing) return res.status(409).json({ error: 'An account with this email already exists — try signing in' });
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      name: name.trim().slice(0, 60),
+      email: email.toLowerCase().trim(),
+      passwordHash
+    });
+
+    const token = signToken(user._id);
+    res.status(201).json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email }
+    });
+  } catch (error) {
+    console.error('Signup Error:', error);
+    res.status(500).json({ error: 'Could not create your account — please try again' });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body || {};
+    if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) return res.status(401).json({ error: 'No account found for this email' });
+
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) return res.status(401).json({ error: 'Wrong password — try again' });
+
+    const token = signToken(user._id);
+    res.json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email }
+    });
+  } catch (error) {
+    console.error('Login Error:', error);
+    res.status(500).json({ error: 'Could not sign you in — please try again' });
+  }
+});
+
+app.get('/api/auth/me', requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('name email createdAt');
+    if (!user) return res.status(401).json({ error: 'Account not found' });
+    res.json({ user: { id: user._id, name: user.name, email: user.email } });
+  } catch (error) {
+    res.status(500).json({ error: 'Could not load your profile' });
+  }
+});
 
 /*
 ========================

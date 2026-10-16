@@ -12,10 +12,23 @@ export function notifyCartUpdated() {
   window.dispatchEvent(new CustomEvent('ffm:cart-updated'));
 }
 
+// Auth token lives in localStorage under this key. The API client attaches
+// it automatically; the AuthContext (services/auth.jsx) owns the lifecycle.
+export const TOKEN_KEY = 'ffm:auth-token';
+
 async function request(path, options = {}) {
+  const token = (() => {
+    try {
+      return localStorage.getItem(TOKEN_KEY);
+    } catch {
+      return null;
+    }
+  })();
+  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+  if (token) headers.Authorization = `Bearer ${token}`;
   const response = await fetch(`${API_URL}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers,
   });
   if (!response.ok) {
     const text = await response.text().catch(() => '');
