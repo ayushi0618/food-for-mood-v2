@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { UtensilsCrossed, Menu as MenuIcon, X, ShoppingBag } from 'lucide-react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { UtensilsCrossed, Menu as MenuIcon, X, ShoppingBag, LogIn, LogOut } from 'lucide-react';
 import { getCart } from '../services/api';
+import { useAuth } from '../services/auth';
 
 const LINKS = [
   { to: '/', label: 'Home', end: true },
@@ -16,6 +17,8 @@ function Navbar() {
   const [open, setOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, ready, logout } = useAuth();
 
   const refreshCart = async () => {
     try {
@@ -32,6 +35,18 @@ function Navbar() {
     window.addEventListener('ffm:cart-updated', handler);
     return () => window.removeEventListener('ffm:cart-updated', handler);
   }, [location.pathname]);
+
+  // Cart is per-user on the server — re-fetch the badge when auth changes.
+  useEffect(() => {
+    refreshCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const handleLogout = () => {
+    logout();
+    setOpen(false);
+    navigate('/');
+  };
 
   return (
     <nav className="navbar">
@@ -74,6 +89,28 @@ function Navbar() {
           Cart
           {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </NavLink>
+        {ready && (user ? (
+          <>
+            <span className="nav-user" title={user.email}>
+              {(user.name || 'F')[0].toUpperCase()}
+            </span>
+            <button
+              className="nav-auth-btn"
+              onClick={handleLogout}
+              title={`Sign out (${user.email})`}
+            >
+              <LogOut size={15} /> Sign out
+            </button>
+          </>
+        ) : (
+          <NavLink
+            to="/auth"
+            onClick={() => setOpen(false)}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            <LogIn size={15} /> Sign in
+          </NavLink>
+        ))}
       </div>
     </nav>
   );

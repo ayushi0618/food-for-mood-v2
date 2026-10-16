@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { User, Save, Info } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { User, Save, Info, LogOut, LogIn } from 'lucide-react';
 import { useToast } from '../toast';
+import { useAuth } from '../services/auth';
 import {
   getPreferences,
   savePreferences,
@@ -10,11 +12,19 @@ import {
 
 function Profile() {
   const pushToast = useToast();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [prefs, setPrefs] = useState(() => getPreferences());
 
   const save = () => {
     savePreferences(prefs);
     pushToast('Preferences saved', 'Recommendations will highlight matching dishes.');
+  };
+
+  const handleLogout = () => {
+    logout();
+    pushToast('Signed out', 'See you soon — your journal stays safe in this browser.');
+    navigate('/');
   };
 
   const favCount = getFavorites().length;
@@ -96,7 +106,7 @@ function Profile() {
             <span className="kpi-icon" style={{ background: 'linear-gradient(135deg,#C2571B,#9C4313)', marginBottom: 14 }}>
               <User size={24} />
             </span>
-            <h3>{prefs.name ? `Hello, ${prefs.name}` : 'Hello, foodie'}</h3>
+            <h3>{user?.name ? `Hello, ${user.name}` : prefs.name ? `Hello, ${prefs.name}` : 'Hello, foodie'}</h3>
             <p className="panel-sub">
               {prefs.diet === 'veg'
                 ? 'Vegetarian'
@@ -120,11 +130,44 @@ function Profile() {
             <div style={{ display: 'flex', gap: 12 }}>
               <Info size={20} color="#B07C2E" style={{ flexShrink: 0, marginTop: 2 }} />
               <p style={{ fontSize: '0.9rem', color: 'var(--ink-soft)' }}>
-                Your journal, favorites and preferences never leave this
-                browser. Orders and recommendations live in MongoDB so they
-                follow you across devices.
+                {user
+                  ? `Signed in as ${user.email}. Your cart and orders are tied to this account and follow you across devices.`
+                  : 'Your journal, favorites and preferences never leave this browser. Orders and recommendations live in MongoDB so they follow you across devices.'}
               </p>
             </div>
+          </div>
+
+          <div className="panel">
+            <h3>Account</h3>
+            {user ? (
+              <>
+                <div className="sum-row" style={{ color: 'var(--ink-soft)' }}>
+                  <span>Signed in as</span>
+                  <b>{user.email}</b>
+                </div>
+                <button
+                  className="btn"
+                  onClick={handleLogout}
+                  style={{ width: '100%', marginTop: 12 }}
+                >
+                  <LogOut size={16} /> Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="panel-sub">
+                  You're browsing as a guest. Create an account to keep your
+                  cart and order history on every device.
+                </p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate('/auth')}
+                  style={{ width: '100%' }}
+                >
+                  <LogIn size={16} /> Sign in / Create account
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

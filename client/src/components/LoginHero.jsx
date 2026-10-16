@@ -86,7 +86,7 @@ function LoginHero() {
         </p>
 
         <div className="wl21-ctas">
-          <Link to="/profile" className="wl21-btn">
+          <Link to="/auth" className="wl21-btn">
             <LogIn size={17} /> Sign in
           </Link>
           <Link to="/menu" className="wl21-btn-ghost">
