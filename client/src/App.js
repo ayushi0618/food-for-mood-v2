@@ -16,6 +16,7 @@ import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import Auth from './pages/Auth';
+import GiftPage from './pages/Gift';
 import './App.css';
 import './twentyfirst.css';
 
@@ -132,6 +133,7 @@ function App() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/gift/:id" element={<GiftPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </BrowserRouter>
