@@ -15,6 +15,8 @@ const DISHES = [
     tags: ['comfort', 'light', 'one-pot'],
     blurb: 'Slow-cooked rice and moong dal, finished with ghee. The ultimate hug in a bowl.',
     image: U('photo-1512058564366-18510be2db19'),
+    prepTime: 20,
+    serves: 'Serves 1',
   },
   {
     name: 'Masala Dosa',
@@ -25,6 +27,8 @@ const DISHES = [
     tags: ['crispy', 'breakfast', 'classic'],
     blurb: 'Golden crisp crepe wrapped around spiced potato, with coconut chutney and sambar.',
     image: U('photo-1668236543090-82eba5ee5976'),
+    prepTime: 15,
+    serves: '2 pcs',
   },
   {
     name: 'Biryani',
@@ -35,6 +39,8 @@ const DISHES = [
     tags: ['celebration', 'aromatic', 'crowd-pleaser'],
     blurb: 'Fragrant dum-cooked rice layered with marinated chicken and saffron.',
     image: U('photo-1633945274405-b6c8069047b0'),
+    prepTime: 30,
+    serves: 'Serves 1',
   },
   {
     name: 'Rajma Chawal',
@@ -45,6 +51,8 @@ const DISHES = [
     tags: ['comfort', 'homestyle', 'protein'],
     blurb: 'Kidney beans simmered in tomato gravy over steaming basmati. Ghar jaisa.',
     image: U('photo-1589302168068-964664d93dc0'),
+    prepTime: 25,
+    serves: 'Serves 1',
   },
   {
     name: 'Gulab Jamun',
@@ -55,6 +63,8 @@ const DISHES = [
     tags: ['sweet', 'warm', 'festive'],
     blurb: 'Soft khoya dumplings soaked in rose-cardamom syrup. Served warm.',
     image: U('photo-1601050690597-df0568f70950'),
+    prepTime: 10,
+    serves: '4 pcs',
   },
   {
     name: 'Maggi',
@@ -65,6 +75,8 @@ const DISHES = [
     tags: ['nostalgia', 'midnight', 'quick'],
     blurb: 'The 2-minute legend. Best eaten straight from the pan at 2 AM.',
     image: U('photo-1612929633738-8fe44f7ec841'),
+    prepTime: 5,
+    serves: 'Serves 1',
   },
   {
     name: 'Paneer Butter Masala',
@@ -75,6 +87,8 @@ const DISHES = [
     tags: ['rich', 'creamy', 'dinner'],
     blurb: 'Silky tomato-cashew gravy with soft paneer cubes. Naan mandatory.',
     image: U('photo-1631452180519-c014fe946bc7'),
+    prepTime: 25,
+    serves: 'Serves 2',
   },
   {
     name: 'Chole Bhature',
@@ -85,6 +99,8 @@ const DISHES = [
     tags: ['hearty', 'weekend', 'spicy'],
     blurb: 'Fluffy bhature with dark, tangy Amritsari chole. A Delhi emotion.',
     image: U('photo-1626132647523-66f5bf380027'),
+    prepTime: 20,
+    serves: 'Serves 1',
   },
   {
     name: 'Dal Makhani',
@@ -95,6 +111,8 @@ const DISHES = [
     tags: ['slow-cooked', 'creamy', 'classic'],
     blurb: 'Black lentils simmered overnight with butter and cream. Pure patience.',
     image: U('photo-1546833999-b9f581a1996d'),
+    prepTime: 30,
+    serves: 'Serves 2',
   },
   {
     name: 'Samosa',
@@ -105,6 +123,8 @@ const DISHES = [
     tags: ['crispy', 'chai-time', 'street'],
     blurb: 'Flaky pastry, spiced potato heart, imli chutney on the side.',
     image: U('photo-1601050690597-df0568f70950'),
+    prepTime: 10,
+    serves: '2 pcs',
   },
   {
     name: 'Butter Chicken',
@@ -115,6 +135,8 @@ const DISHES = [
     tags: ['rich', 'dinner', 'classic'],
     blurb: 'Tandoor-kissed chicken folded into velvety makhani gravy.',
     image: U('photo-1603894584373-5ac82b2ae398'),
+    prepTime: 30,
+    serves: 'Serves 2',
   },
   {
     name: 'Poha',
@@ -125,6 +147,8 @@ const DISHES = [
     tags: ['light', 'breakfast', 'quick'],
     blurb: 'Flattened rice tossed with peanuts, curry leaves and a squeeze of lime.',
     image: U('photo-1606491956689-2ea866880c84'),
+    prepTime: 10,
+    serves: 'Serves 1',
   },
   {
     name: 'Idli Sambar',
@@ -135,6 +159,8 @@ const DISHES = [
     tags: ['light', 'healthy', 'breakfast'],
     blurb: 'Cloud-soft steamed cakes dunked in piping-hot sambar.',
     image: U('photo-1589301760014-d929f3979dbc'),
+    prepTime: 15,
+    serves: '4 pcs',
   },
   {
     name: 'Pav Bhaji',
@@ -145,6 +171,8 @@ const DISHES = [
     tags: ['street', 'buttery', 'crowd-pleaser'],
     blurb: 'Mashed veg bhaji loaded with butter, scooped up with toasted pav.',
     image: U('photo-1606755962773-d324e0a13086'),
+    prepTime: 20,
+    serves: 'Serves 1',
   },
   {
     name: 'Rasmalai',
@@ -155,6 +183,8 @@ const DISHES = [
     tags: ['sweet', 'chilled', 'festive'],
     blurb: 'Feather-light chenna discs resting in saffron-kissed milk.',
     image: U('photo-1551024506-0bccd828d307'),
+    prepTime: 10,
+    serves: '2 pcs',
   },
   {
     name: 'Filter Coffee',
@@ -165,6 +195,8 @@ const DISHES = [
     tags: ['morning', 'strong', 'south-indian'],
     blurb: 'Frothy degree coffee, dabara-style. Instant mood reset.',
     image: U('photo-1617690702423-8e0a3f2e4b1c'),
+    prepTime: 5,
+    serves: '250 ml',
   },
 ];
 

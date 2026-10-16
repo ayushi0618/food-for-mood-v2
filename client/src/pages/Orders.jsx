@@ -13,6 +13,7 @@ import { getOrders, addToCart, notifyCartUpdated } from '../services/api';
 import { useToast } from '../toast';
 import foodImages from '../data/foodImages';
 import { imgFallback, dishImage } from '../utils/img';
+import { DishName } from '../components/DishHover';
 
 // Order tracking timeline. Stage progression is a client-side demo simulation
 // driven by elapsed time since the order was placed — clearly labeled as such.
@@ -133,7 +134,7 @@ function Orders() {
                     onError={imgFallback}
                   />
                   <div>
-                    <h3>{item.food}</h3>
+                    <h3><DishName name={item.food} /></h3>
                     <span className="o-date">
                       {d.toLocaleDateString('en-IN', {
                         day: 'numeric',

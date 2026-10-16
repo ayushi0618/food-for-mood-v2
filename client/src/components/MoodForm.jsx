@@ -1,9 +1,15 @@
+// Mood analyzer section — rebuilt with 21st.dev components:
+// CameraPermissionCard (onboarding) + EmojiRating (tap-how-you-feel) +
+// PromptBox (rich AI prompt box w/ voice input + selfie upload).
+// Analysis flow, journaling, cart and toasts are unchanged.
 import { useState } from 'react';
-import { BrainCircuit, Loader2 } from 'lucide-react';
 import { analyzeIncident, notifyCartUpdated } from '../services/api';
 import { logJournalEntry } from '../services/store';
 import { detectMood, MOOD_SUGGESTIONS } from '../utils/mood';
 import FoodCard from './FoodCard';
+import CameraPermissionCard from './CameraPermissionCard';
+import EmojiRating from './EmojiRating';
+import PromptBox from './PromptBox';
 
 function MoodForm() {
   const [incident, setIncident] = useState('');
@@ -11,6 +17,7 @@ function MoodForm() {
   const [mood, setMood] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [photo, setPhoto] = useState(null);
 
   async function handleSubmit() {
     if (!incident.trim() || loading) return;
@@ -47,21 +54,32 @@ function MoodForm() {
         <span className="eyebrow">Mood analyzer</span>
         <h2>Tell us what's happening</h2>
         <p>
-          Describe your day in a sentence or two. Gemini reads the emotional
-          context and plates up one perfect comfort dish.
+          Describe your day, tap an emoji, or just speak — Gemini reads the
+          emotional context and plates up one perfect comfort dish.
         </p>
       </div>
 
-      <div className="analyze-card">
-        <textarea
-          value={incident}
-          onChange={(e) => setIncident(e.target.value)}
-          placeholder="Example: I failed my exam and it has been raining all day."
-          rows={4}
-          maxLength={500}
+      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+        <CameraPermissionCard />
+
+        <EmojiRating
+          onPick={(e) => setIncident(e.text)}
         />
 
-        <div className="mood-chips">
+        <div style={{ marginTop: 22 }}>
+          <PromptBox
+            value={incident}
+            onChange={setIncident}
+            onSubmit={handleSubmit}
+            loading={loading}
+            onVoiceTranscript={(t) => setIncident(t)}
+            onPhoto={setPhoto}
+            photoAttached={photo}
+            onClearPhoto={() => setPhoto(null)}
+          />
+        </div>
+
+        <div className="mood-chips" style={{ marginTop: 18 }}>
           {MOOD_SUGGESTIONS.map((s) => (
             <button
               key={s.label}
@@ -73,30 +91,20 @@ function MoodForm() {
           ))}
         </div>
 
-        <button
-          className="btn btn-primary btn-block"
-          onClick={handleSubmit}
-          disabled={loading || !incident.trim()}
-        >
-          {loading ? (
-            <>
-              <Loader2 size={18} className="spinner" style={{ border: 'none' }} />
-              Reading your mood…
-            </>
-          ) : (
-            <>
-              <BrainCircuit size={18} /> Get my recommendation
-            </>
-          )}
-        </button>
-
         {error && <div className="mood-error">{error}</div>}
       </div>
 
-      {result && <FoodCard food={result} mood={mood} onNew={() => {
-        setResult(null);
-        setIncident('');
-      }} />}
+      {result && (
+        <FoodCard
+          food={result}
+          mood={mood}
+          onNew={() => {
+            setResult(null);
+            setIncident('');
+            setPhoto(null);
+          }}
+        />
+      )}
     </section>
   );
 }

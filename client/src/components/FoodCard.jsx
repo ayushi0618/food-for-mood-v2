@@ -6,6 +6,7 @@ import { findDish } from '../data/dishes';
 import { getNutrition } from '../data/nutrition';
 import { getPreferences, isFavorite, toggleFavorite } from '../services/store';
 import { imgFallback, dishImage } from '../utils/img';
+import { DishName } from '../components/DishHover';
 
 // Recommendation result card. Note: /api/analyze already persists the dish to
 // the cart (status 'cart'), so there is no fake "add" step — the card shows
@@ -44,7 +45,7 @@ function FoodCard({ food, mood, onNew }) {
             <Sparkles size={13} /> Detected mood: {mood.label}
           </span>
         )}
-        <h3>{food.food}</h3>
+        <h3><DishName name={food.food} /></h3>
 
         {matchesDiet && (
           <div>

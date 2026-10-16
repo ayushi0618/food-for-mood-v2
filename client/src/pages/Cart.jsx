@@ -10,6 +10,7 @@ import {
 import { useToast } from '../toast';
 import foodImages from '../data/foodImages';
 import { imgFallback, dishImage } from '../utils/img';
+import { DishName } from '../components/DishHover';
 
 function Cart() {
   const [items, setItems] = useState([]);
@@ -121,7 +122,7 @@ function Cart() {
                   onError={imgFallback}
                 />
                 <div>
-                  <h3>{item.food}</h3>
+                  <h3><DishName name={item.food} /></h3>
                   {item.reason && <p className="ci-reason">{item.reason}</p>}
                   <span className="ci-price">₹{item.price}</span>
                 </div>

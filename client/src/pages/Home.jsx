@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BarChart3, Heart, UtensilsCrossed } from 'lucide-react';
 
-import Hero from '../components/Hero';
+import AnimatedHero from '../components/AnimatedHero';
+import LoginHero from '../components/LoginHero';
 import MoodForm from '../components/MoodForm';
 import About from '../components/About';
 import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
-import DishCard from '../components/DishCard';
+import MenuItemCard from '../components/MenuItemCard';
 
 import { getRecent } from '../services/api';
 import { getJournal } from '../services/store';
@@ -15,6 +16,7 @@ import { useToast } from '../toast';
 import foodImages from '../data/foodImages';
 import DISHES from '../data/dishes';
 import { imgFallback, dishImage } from '../utils/img';
+import { DishName } from '../components/DishHover';
 
 function Home() {
   const [recent, setRecent] = useState([]);
@@ -33,7 +35,7 @@ function Home() {
 
   return (
     <>
-      <Hero />
+      <AnimatedHero />
       <MoodForm />
       <About />
 
@@ -43,9 +45,9 @@ function Home() {
           <h2>Crowd favorites</h2>
           <p>A few beloved comfort dishes. Save the ones you love, order in one tap.</p>
         </div>
-        <div className="dish-grid">
+        <div className="mic21-grid">
           {previewDishes.map((d) => (
-            <DishCard
+            <MenuItemCard
               key={d.name}
               dish={d}
               onToast={(t, b) => pushToast(t, b)}
@@ -103,7 +105,7 @@ function Home() {
                   onError={imgFallback}
                 />
                 <div className="rc-body">
-                  <h4>{item.food}</h4>
+                  <h4><DishName name={item.food} /></h4>
                   <span>₹{item.price}</span>
                 </div>
               </div>
@@ -125,6 +127,7 @@ function Home() {
         </div>
       </section>
 
+      <LoginHero />
       <Testimonials />
       <Footer />
     </>

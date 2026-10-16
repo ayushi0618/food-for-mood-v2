@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Navbar from './components/Navbar';
 import Notification from './components/Notification';
+import { DishHoverRoot } from './components/DishHover';
 import { ToastContext } from './toast';
 import { WS_URL, notifyCartUpdated } from './services/api';
 
@@ -14,6 +15,7 @@ import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import './App.css';
+import './twentyfirst.css';
 
 let toastSeq = 0;
 
@@ -117,6 +119,7 @@ function App() {
         <ScrollToTop />
         <Navbar />
         <Notification toasts={toasts} dismiss={dismiss} />
+        <DishHoverRoot />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />

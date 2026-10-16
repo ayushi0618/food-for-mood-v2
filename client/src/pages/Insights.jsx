@@ -12,6 +12,8 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -25,6 +27,8 @@ import {
 import { getOrders } from '../services/api';
 import { getJournal, clearJournal } from '../services/store';
 import { moodColor } from '../utils/mood';
+import KpiTile from '../components/KpiTile';
+import { DishName } from '../components/DishHover';
 
 const PIE_COLORS = ['#C2571B', '#5F8D4E', '#D9A441', '#C0495B', '#6B8CAE', '#9A8FBF'];
 
@@ -98,6 +102,33 @@ function Insights() {
       .slice(0, 6);
   }, [journal, orders]);
 
+  const trendData = useMemo(() => {
+    // 14-day mood-history trend: check-ins vs orders per day (line-charts-9 style)
+    const buckets = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      buckets.push({
+        label: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+        key: dayKey(d.getTime()),
+        checkins: 0,
+        orders: 0,
+      });
+    }
+    const map = Object.fromEntries(buckets.map((b) => [b.key, b]));
+    journal.forEach((j) => {
+      const b = map[dayKey(j.ts)];
+      if (b) b.checkins += 1;
+    });
+    orders.forEach((o) => {
+      const ts = o.createdAt || o.ts || o.date;
+      if (!ts) return;
+      const b = map[dayKey(new Date(ts).getTime())];
+      if (b) b.orders += 1;
+    });
+    return buckets;
+  }, [journal, orders]);
+
   const kpis = [
     { icon: Activity, label: 'Mood check-ins', value: stats.checkins, bg: 'linear-gradient(135deg,#C2571B,#9C4313)' },
     { icon: ShoppingBag, label: 'Orders placed', value: stats.orders, bg: 'linear-gradient(135deg,#5F8D4E,#476B3A)' },
@@ -123,17 +154,16 @@ function Insights() {
         </p>
       </div>
 
-      <div className="kpi-grid">
-        {kpis.map((k) => (
-          <div className="kpi" key={k.label}>
-            <span className="kpi-icon" style={{ background: k.bg }}>
-              <k.icon size={24} />
-            </span>
-            <div>
-              <b>{k.value}</b>
-              <span>{k.label}</span>
-            </div>
-          </div>
+      <div className="bento21">
+        {kpis.map((k, i) => (
+          <KpiTile
+            key={k.label}
+            icon={k.icon}
+            label={k.label}
+            value={k.value}
+            bg={k.bg}
+            delay={i * 90}
+          />
         ))}
       </div>
 
@@ -150,6 +180,45 @@ function Insights() {
         </div>
       ) : (
         <>
+          <div className="panel" style={{ marginBottom: 18 }}>
+            <h3>Mood history trend</h3>
+            <p className="panel-sub">Check-ins vs orders per day · last 14 days</p>
+            <div className="trend21-legend">
+              <span><i style={{ background: '#C2571B' }} /> Check-ins</span>
+              <span><i style={{ background: '#5F8D4E' }} /> Orders</span>
+            </div>
+            <div className="chart-box" style={{ height: 260 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={trendData} margin={{ top: 5, right: 10, left: -18, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#EBDFCE" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="#8A7561" tickLine={false} axisLine={{ stroke: '#EBDFCE' }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 11 }} stroke="#8A7561" tickLine={false} axisLine={false} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: 12, border: '1px solid #EBDFCE' }}
+                    cursor={{ stroke: '#D9A441', strokeDasharray: '4 4' }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="checkins"
+                    stroke="#C2571B"
+                    strokeWidth={3}
+                    dot={{ r: 3.5, fill: '#C2571B', strokeWidth: 0 }}
+                    activeDot={{ r: 6, fill: '#C2571B', stroke: '#F9E8D9', strokeWidth: 2 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="orders"
+                    stroke="#5F8D4E"
+                    strokeWidth={3}
+                    strokeDasharray="7 5"
+                    dot={{ r: 3.5, fill: '#5F8D4E', strokeWidth: 0 }}
+                    activeDot={{ r: 6, fill: '#5F8D4E', stroke: '#E7F0E1', strokeWidth: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
           <div className="charts-2">
             <div className="panel">
               <h3>Check-in activity</h3>
@@ -209,7 +278,7 @@ function Insights() {
                         marginRight: 6,
                       }}
                     />
-                    {d.name} × {d.value}
+                    <DishName name={d.name} /> × {d.value}
                   </span>
                 ))}
               </div>

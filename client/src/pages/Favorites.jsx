@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
-import DishCard from '../components/DishCard';
+import MenuItemCard from '../components/MenuItemCard';
 import { useToast } from '../toast';
 import { getFavorites } from '../services/store';
 
@@ -35,10 +35,10 @@ function Favorites() {
           </Link>
         </div>
       ) : (
-        <div className="dish-grid" key={favs.length}>
+        <div className="mic21-grid" key={favs.length}>
           {favs.map((d) => (
             <div key={d.id || d.name} onClickCapture={refresh}>
-              <DishCard dish={d} onToast={(t, b) => pushToast(t, b)} />
+              <MenuItemCard dish={d} onToast={(t, b) => pushToast(t, b)} />
             </div>
           ))}
         </div>

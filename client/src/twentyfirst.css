@@ -1,0 +1,1272 @@
+/* ==========================================================================
+   21st.dev component upgrade + Amber Hearth theme
+   Warm amber/terracotta glow layered over the existing cream/basil identity.
+   ========================================================================== */
+
+:root {
+  --amber: #e8912d;
+  --amber-deep: #c26e1b;
+  --amber-soft: #fdf1dd;
+  --ember: #b34a12;
+  --hearth: linear-gradient(135deg, #e8912d, #c2571b);
+}
+
+/* Warm ambient wash across the whole app */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(900px 420px at 12% -4%, rgba(232, 145, 45, 0.1), transparent 60%),
+    radial-gradient(760px 380px at 92% 8%, rgba(194, 87, 27, 0.08), transparent 60%);
+}
+
+/* --------------------------------------------------------------------------
+   Menu Item Card — 21st @ravikatiyar162/menu-item-card
+   -------------------------------------------------------------------------- */
+.mic21 {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+.mic21:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+.mic21-img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--cream-2);
+}
+.mic21-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.mic21:hover .mic21-img img {
+  transform: scale(1.06);
+}
+.mic21-veg {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1.5px solid var(--basil);
+  display: grid;
+  place-items: center;
+}
+.mic21-veg i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--basil);
+}
+.mic21-veg.nonveg {
+  border-color: #a83a2e;
+}
+.mic21-veg.nonveg i {
+  background: #a83a2e;
+}
+.mic21-off {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--hearth);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(194, 87, 27, 0.4);
+}
+.mic21-fav {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--terra);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 16px rgba(46, 31, 22, 0.18);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.mic21-fav:hover {
+  transform: scale(1.12);
+}
+.mic21-fav.active {
+  color: #c0495b;
+  animation: mic21-pop 0.35s ease;
+}
+@keyframes mic21-pop {
+  0% { transform: scale(0.6); }
+  55% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.mic21-body {
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.mic21-top h3 {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+.mic21-cuisine {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber-deep);
+}
+.mic21-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.mic21-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.mic21-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.mic21-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line);
+}
+.mic21-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tag-sm {
+  font-size: 0.7rem;
+  padding: 3px 9px;
+}
+.mic21-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+}
+.mic21-price b {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+.mic21-price s {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+.mic21-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--hearth);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  box-shadow: 0 8px 20px rgba(194, 87, 27, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.mic21-add:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 26px rgba(194, 87, 27, 0.45);
+}
+.mic21-add:active {
+  transform: scale(0.96);
+}
+.mic21-add.done {
+  background: linear-gradient(135deg, #5f8d4e, #476b3a);
+  box-shadow: 0 8px 20px rgba(95, 141, 78, 0.35);
+}
+.mic21-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: mic21-spin 0.7s linear infinite;
+}
+@keyframes mic21-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   Animated Hero — 21st @tommyjepsen/animated-hero
+   -------------------------------------------------------------------------- */
+.hero21 {
+  position: relative;
+  overflow: hidden;
+  padding: 84px 24px 0;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(1000px 480px at 50% -10%, #fdf1dd 0%, transparent 60%),
+    var(--cream);
+}
+.hero21-bg .blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: blob-drift 14s ease-in-out infinite alternate;
+}
+.blob.b1 {
+  width: 420px;
+  height: 420px;
+  background: #f6c46a;
+  top: -120px;
+  left: -100px;
+}
+.blob.b2 {
+  width: 380px;
+  height: 380px;
+  background: #f0a35e;
+  top: -60px;
+  right: -80px;
+  animation-delay: -5s;
+}
+.blob.b3 {
+  width: 300px;
+  height: 300px;
+  background: #e8b4a0;
+  bottom: 60px;
+  left: 40%;
+  animation-delay: -9s;
+  opacity: 0.4;
+}
+@keyframes blob-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(50px, 34px) scale(1.12); }
+}
+.hero21-bg .grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: radial-gradient(rgba(46, 31, 22, 0.7) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.hero21-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+.eyebrow-glow {
+  box-shadow: 0 0 0 1px rgba(232, 145, 45, 0.25), 0 6px 18px rgba(232, 145, 45, 0.18);
+}
+.hero21-title {
+  font-size: clamp(2.8rem, 6vw, 4.6rem);
+  font-weight: 900;
+  margin: 18px 0 16px;
+  animation: rise-in 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.hero21-title em {
+  font-style: italic;
+  color: var(--terra);
+}
+.hero21-title .grad {
+  background: var(--hearth);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero21-sub {
+  font-size: 1.12rem;
+  color: var(--muted);
+  max-width: 480px;
+  animation: rise-in 0.8s 0.12s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+.hero21 .hero-ctas {
+  animation: rise-in 0.8s 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.btn-xl {
+  padding: 14px 28px;
+  font-size: 1rem;
+}
+.hero21 .hero-stats {
+  animation: rise-in 0.8s 0.32s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.hero21-art {
+  position: relative;
+  min-height: 480px;
+}
+.hero21-dish {
+  position: absolute;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 4px solid #fff;
+}
+.hero21-dish img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero21-dish.main {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  left: 50%;
+  top: 90px;
+  transform: translateX(-50%);
+  animation: float-y 6s ease-in-out infinite;
+}
+.hero21-dish.a {
+  width: 150px;
+  height: 150px;
+  left: 6%;
+  top: 30px;
+  animation: float-y 7s 0.8s ease-in-out infinite;
+}
+.hero21-dish.b {
+  width: 170px;
+  height: 170px;
+  right: 4%;
+  bottom: 40px;
+  animation: float-y 5.4s 1.6s ease-in-out infinite;
+}
+.hero21-dish-tag {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(46, 31, 22, 0.82);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+.hero21-dish.main { animation-name: float-y-main; }
+@keyframes float-y-main {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-18px); }
+}
+.hero21-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+  animation: float-y 6.5s ease-in-out infinite;
+}
+.hero21-chip.c1 { left: 2%; bottom: 120px; animation-delay: 0.4s; }
+.hero21-chip.c2 { right: 8%; top: 40px; animation-delay: 1.8s; }
+.hero21-chip.c3 { right: 2%; bottom: 150px; animation-delay: 2.6s; }
+.hero21-chip.c4 { left: 10%; top: 150px; animation-delay: 3.2s; }
+.hero21-chip.c5 { left: 34%; bottom: 24px; animation-delay: 1.1s; }
+.hero21-chip.c6 { right: 22%; top: 200px; animation-delay: 4s; }
+.hero21-marquee {
+  position: relative;
+  z-index: 1;
+  margin-top: 56px;
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  gap: 0;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-item {
+  padding: 16px 26px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.marquee-item i {
+  color: var(--amber);
+  font-style: normal;
+  margin-left: 26px;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@media (max-width: 900px) {
+  .hero21-inner { grid-template-columns: 1fr; }
+  .hero21-art { min-height: 420px; }
+}
+
+/* --------------------------------------------------------------------------
+   Emoji Rating — 21st @jatin-yadav05/emoji-rating
+   -------------------------------------------------------------------------- */
+.emoji-rate {
+  margin: 26px 0 6px;
+}
+.emoji-rate-title {
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+.emoji-track {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 6px 2px 10px;
+  scrollbar-width: thin;
+}
+.emoji-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 68px;
+  padding: 12px 6px 10px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.emoji-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--amber);
+  box-shadow: 0 10px 22px rgba(232, 145, 45, 0.22);
+}
+.emoji-item.on {
+  border-color: var(--terra);
+  background: var(--terra-soft);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 24px rgba(194, 87, 27, 0.3);
+}
+.emoji-glyph {
+  font-size: 1.7rem;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+.emoji-item.on .emoji-glyph {
+  transform: scale(1.2);
+  animation: emoji-bounce 0.4s ease;
+}
+@keyframes emoji-bounce {
+  0% { transform: scale(0.7); }
+  60% { transform: scale(1.35); }
+  100% { transform: scale(1.2); }
+}
+.emoji-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.emoji-item.on .emoji-label {
+  color: var(--terra-dark);
+}
+
+/* --------------------------------------------------------------------------
+   AI Voice Input + Voice Orb — 21st @kokonutd/ai-voice-input
+   -------------------------------------------------------------------------- */
+.voice-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 18px 10px 12px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.voice-pill:hover {
+  border-color: var(--amber);
+}
+.voice-pill.listening {
+  border-color: var(--terra);
+  box-shadow: 0 0 0 4px rgba(194, 87, 27, 0.15);
+  color: var(--terra-dark);
+}
+.voice-pill.denied {
+  opacity: 0.6;
+}
+.voice-orb {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+}
+.voice-orb-core {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #e8912d, #c2571b, #d9a441, #e8912d);
+  animation: orb-spin 3s linear infinite;
+}
+@keyframes orb-spin {
+  to { transform: rotate(360deg); }
+}
+.voice-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(194, 87, 27, 0.55);
+  animation: orb-ping 1.6s ease-out infinite;
+}
+.voice-ring.r2 { animation-delay: 0.5s; }
+.voice-ring.r3 { animation-delay: 1s; }
+@keyframes orb-ping {
+  0% { transform: scale(0.55); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+.voice-icon {
+  display: grid;
+  place-items: center;
+  color: var(--terra);
+}
+.voice-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 20px;
+}
+.voice-bars i {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--terra);
+  animation: voice-bar 0.9s ease-in-out infinite;
+}
+.voice-bars i:nth-child(odd) { height: 14px; }
+.voice-bars i:nth-child(even) { height: 20px; }
+@keyframes voice-bar {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+.voice-pill.compact {
+  padding: 8px 14px 8px 10px;
+  font-size: 0.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   AI Prompt Box — 21st @jahed/ai-prompt-box
+   -------------------------------------------------------------------------- */
+.prompt21 {
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow-lg);
+  padding: 18px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.prompt21:focus-within {
+  border-color: var(--amber);
+  box-shadow: 0 24px 60px rgba(232, 145, 45, 0.22);
+}
+.prompt21-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.prompt21-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber-deep);
+  background: var(--amber-soft);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.prompt21-count {
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.prompt21-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  min-height: 110px;
+  font-family: inherit;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: transparent;
+}
+.prompt21-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.prompt21-tools {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--cream-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.tool-btn:hover {
+  border-color: var(--amber);
+  background: var(--amber-soft);
+}
+.prompt21-submit {
+  padding: 12px 26px;
+  font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   File Upload — 21st @manuarora700/file-upload
+   -------------------------------------------------------------------------- */
+.fu21 {
+  margin-top: 4px;
+}
+.fu21-hidden {
+  display: none;
+}
+.fu21-drop {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1.5px dashed var(--line);
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 14px;
+  margin: 10px 0 4px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.fu21-drop:hover,
+.fu21-drop.drag {
+  border-color: var(--amber);
+  background: var(--amber-soft);
+  color: var(--amber-deep);
+}
+.fu21-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  color: var(--terra);
+}
+.fu21-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin: 10px 0 4px;
+}
+.fu21-preview img {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.fu21-prev-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.fu21-prev-meta b {
+  font-size: 0.88rem;
+}
+.fu21-prev-meta span {
+  font-size: 0.75rem;
+  color: var(--muted);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fu21-clear {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+}
+.fu21-clear:hover {
+  color: #c0495b;
+  border-color: #c0495b;
+}
+
+/* --------------------------------------------------------------------------
+   Camera Permission Card — 21st @ahmedmayara/camera-permission-request-card
+   -------------------------------------------------------------------------- */
+.cam21 {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #fff8ec, #fdf1dd);
+  border: 1px solid rgba(232, 145, 45, 0.4);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  position: relative;
+  animation: rise-in 0.6s ease both;
+}
+.cam21-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--hearth);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 18px rgba(194, 87, 27, 0.35);
+}
+.cam21-copy b {
+  font-size: 0.95rem;
+}
+.cam21-copy p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 4px 0 8px;
+}
+.cam21-trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--basil-dark);
+  background: var(--basil-soft);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+.cam21-x {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+}
+.cam21-x:hover {
+  background: rgba(46, 31, 22, 0.08);
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   Cuisine Chips — 21st @uniquesonu/cuisine-selector-chips
+   -------------------------------------------------------------------------- */
+.chips21 {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.chip21 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.chip21:hover {
+  border-color: var(--amber);
+  transform: translateY(-2px);
+}
+.chip21.on {
+  background: var(--hearth);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(194, 87, 27, 0.35);
+  transform: scale(1.04);
+}
+
+/* --------------------------------------------------------------------------
+   Analytics Bento + KPI tiles — 21st bento/analytics inspiration
+   -------------------------------------------------------------------------- */
+.bento21 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.kpi21 {
+  position: relative;
+  grid-column: span 3;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  animation: rise-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  transition: transform 0.2s ease;
+}
+.kpi21:hover {
+  transform: translateY(-4px);
+}
+.kpi21-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 8px 18px rgba(46, 31, 22, 0.2);
+}
+.kpi21-body {
+  display: flex;
+  flex-direction: column;
+}
+.kpi21-body b {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.kpi21-body span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.kpi21-glow {
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  filter: blur(46px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.bento-span8 { grid-column: span 8; }
+.bento-span4 { grid-column: span 4; }
+.bento-span6 { grid-column: span 6; }
+.bento-span12 { grid-column: span 12; }
+@media (max-width: 1000px) {
+  .kpi21 { grid-column: span 6; }
+  .bento-span8, .bento-span4, .bento-span6 { grid-column: span 12; }
+}
+@media (max-width: 560px) {
+  .kpi21 { grid-column: span 12; }
+}
+
+/* Mood-history line chart card (line-charts-9 style) */
+.trend21-legend {
+  display: flex;
+  gap: 16px;
+  margin: 4px 0 10px;
+  flex-wrap: wrap;
+}
+.trend21-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.trend21-legend i {
+  width: 12px;
+  height: 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Dish grid refresh for MenuItemCard */
+.mic21-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  gap: 22px;
+}
+
+/* --------------------------------------------------------------------------
+   Waitlist Hero — 21st @minhxthanh/waitlist-hero (Food for Mood edition)
+   -------------------------------------------------------------------------- */
+.wl21 {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(800px 380px at 50% 0%, rgba(232, 145, 45, 0.22), transparent 62%),
+    radial-gradient(700px 420px at 8% 100%, rgba(194, 87, 27, 0.16), transparent 60%),
+    linear-gradient(180deg, #241811, #160f0a);
+  border-radius: 32px;
+  margin: 24px auto;
+  max-width: 1180px;
+  padding: 96px 24px;
+  color: #fdf6ec;
+}
+.wl21-floaters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.wl21-tile {
+  position: absolute;
+  filter: saturate(1.2) drop-shadow(0 14px 24px rgba(0, 0, 0, 0.5));
+  opacity: 0.85;
+  animation: wl21-float 8s ease-in-out infinite;
+}
+@keyframes wl21-float {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-18px) rotate(5deg); }
+}
+.wl21-glow {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 560px;
+  height: 560px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(232, 145, 45, 0.28), transparent 65%);
+  filter: blur(10px);
+}
+.wl21-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  animation: rise-in 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.wl21-logo {
+  display: inline-grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: var(--hearth);
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(232, 145, 45, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  margin-bottom: 26px;
+  animation: wl21-logo-in 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+@keyframes wl21-logo-in {
+  from { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+.wl21-title {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.wl21-title .grad {
+  background: linear-gradient(120deg, #f6c46a, #e8912d, #f0a35e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.wl21-sub {
+  color: rgba(253, 246, 236, 0.72);
+  font-size: 1.05rem;
+  margin-bottom: 34px;
+}
+.wl21-form {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 8px;
+  max-width: 520px;
+  margin: 0 auto;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.wl21-form:focus-within {
+  border-color: rgba(232, 145, 45, 0.7);
+  box-shadow: 0 0 0 4px rgba(232, 145, 45, 0.18);
+}
+.wl21-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 18px;
+  min-width: 0;
+  font-family: inherit;
+}
+.wl21-input::placeholder {
+  color: rgba(253, 246, 236, 0.45);
+}
+.wl21-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--hearth);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 30px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  box-shadow: 0 10px 26px rgba(232, 145, 45, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.wl21-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(232, 145, 45, 0.55);
+}
+.wl21-btn:active {
+  transform: scale(0.97);
+}
+.wl21-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  background: rgba(95, 141, 78, 0.16);
+  border: 1px solid rgba(95, 141, 78, 0.5);
+  border-radius: 20px;
+  padding: 16px 22px;
+  color: #bfe3b0;
+  animation: rise-in 0.5s ease both;
+}
+.wl21-success div {
+  display: flex;
+  flex-direction: column;
+}
+.wl21-success b {
+  color: #fff;
+}
+.wl21-success span {
+  font-size: 0.86rem;
+  color: rgba(253, 246, 236, 0.7);
+}
+.wl21-note {
+  margin-top: 16px;
+  font-size: 0.82rem;
+  color: rgba(253, 246, 236, 0.55);
+  font-weight: 600;
+}
+.wl21-error {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #f0a3a3;
+  font-weight: 600;
+}
+@media (max-width: 560px) {
+  .wl21 { padding: 64px 18px; border-radius: 24px; }
+  .wl21-form { flex-direction: column; border-radius: 22px; }
+  .wl21-btn { justify-content: center; }
+}
+
+/* LoginHero CTA row */
+.wl21-ctas {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.wl21-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fdf6ec;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 14px 30px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease, transform 0.18s ease;
+}
+.wl21-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+.wl21-tile-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f6c46a;
+  backdrop-filter: blur(6px);
+}
+
+/* --------------------------------------------------------------------------
+   Dish Hover Preview — 21st @minhxthanh/hover-preview (Food for Mood edition)
+   -------------------------------------------------------------------------- */
+.dish-hover-name {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--amber);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+.dish-hover-name:hover {
+  color: var(--terra-dark);
+}
+.dish-hover-card {
+  position: fixed;
+  z-index: 9999;
+  width: 300px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(46, 31, 22, 0.28);
+  pointer-events: auto;
+  animation: dish-hover-in 0.22s cubic-bezier(0.2, 0.7, 0.3, 1.2) both;
+}
+@keyframes dish-hover-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+.dish-hover-img {
+  position: relative;
+  height: 150px;
+  background: var(--cream-2);
+}
+.dish-hover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dish-hover-img .mic21-veg {
+  top: 10px;
+  left: 10px;
+}
+.dish-hover-body {
+  padding: 14px 16px 16px;
+}
+.dish-hover-body h4 {
+  font-size: 1.02rem;
+  margin-bottom: 4px;
+}
+.dish-hover-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.dish-hover-meta b {
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+.dish-hover-sub {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+  font-size: 0.76rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.dish-hover-sub span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
