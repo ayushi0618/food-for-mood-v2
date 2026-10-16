@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Search, Sparkles } from 'lucide-react';
 import MenuItemCard from '../components/MenuItemCard';
+import GiftModal from '../components/GiftModal';
 import CuisineChips from '../components/CuisineChips';
 import OffersMarquee from '../components/OffersMarquee';
 import { useToast } from '../toast';
@@ -26,6 +27,7 @@ function Menu() {
   const pushToast = useToast();
   const prefs = getPreferences();
   const [query, setQuery] = useState('');
+  const [giftDish, setGiftDish] = useState(null);
   const [diet, setDiet] = useState(prefs.diet); // 'any' | 'veg' | 'nonveg'
   const [spice, setSpice] = useState('any'); // 'any' | '1' | '2' | '3'
   const [sort, setSort] = useState('popular'); // 'popular' | 'price-low' | 'price-high' | 'rating'
@@ -91,7 +93,7 @@ function Menu() {
           <div className="ai-picks-row">
             {aiPicks.map((d) => (
               <div className="ai-picks-card" key={d.name}>
-                <MenuItemCard dish={d} onToast={(t, b) => pushToast(t, b)} />
+                <MenuItemCard dish={d} onToast={(t, b) => pushToast(t, b)} onGift={setGiftDish} />
               </div>
             ))}
           </div>
@@ -174,10 +176,13 @@ function Menu() {
           </p>
           <div className="mic21-grid">
             {dishes.map((d) => (
-              <MenuItemCard key={d.name} dish={d} onToast={(t, b) => pushToast(t, b)} />
+              <MenuItemCard key={d.name} dish={d} onToast={(t, b) => pushToast(t, b)} onGift={setGiftDish} />
             ))}
           </div>
         </>
+      )}
+      {giftDish && (
+        <GiftModal dish={giftDish} onClose={() => setGiftDish(null)} onToast={(t, b) => pushToast(t, b)} />
       )}
     </div>
   );
