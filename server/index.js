@@ -117,6 +117,25 @@ const User = mongoose.model('User', userSchema);
 
 /*
 ========================
+Gift Schema — "Send a mood"
+========================
+A gift is a dish + note + mood playlist sent from one person to another.
+Public by design: anyone with the link can view it (that's the viral loop).
+*/
+const giftSchema = new mongoose.Schema({
+  dish: { type: String, required: true, trim: true, maxlength: 80 },
+  price: { type: Number, default: 0 },
+  mood: { type: String, default: 'happy', trim: true, maxlength: 30 },
+  toName: { type: String, required: true, trim: true, maxlength: 40 },
+  fromName: { type: String, required: true, trim: true, maxlength: 40 },
+  note: { type: String, default: '', trim: true, maxlength: 280 },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Gift = mongoose.model('Gift', giftSchema);
+
+/*
+========================
 Gemini Setup
 ========================
 */
@@ -573,6 +592,44 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
     res.json({ user: { id: user._id, name: user.name, email: user.email } });
   } catch (error) {
     res.status(500).json({ error: 'Could not load your profile' });
+  }
+});
+
+/*
+========================
+Gifts — send a mood to someone
+========================
+*/
+app.post('/api/gifts', async (req, res) => {
+  try {
+    const { dish, price, mood, toName, fromName, note } = req.body || {};
+    if (!dish || !dish.trim()) return res.status(400).json({ error: 'Pick a dish to gift' });
+    if (!toName || !toName.trim()) return res.status(400).json({ error: "Tell us who it's for" });
+    if (!fromName || !fromName.trim()) return res.status(400).json({ error: 'Tell us your name' });
+
+    const gift = await Gift.create({
+      dish: dish.trim().slice(0, 80),
+      price: Number(price) || 0,
+      mood: (mood || 'happy').trim().slice(0, 30),
+      toName: toName.trim().slice(0, 40),
+      fromName: fromName.trim().slice(0, 40),
+      note: (note || '').trim().slice(0, 280)
+    });
+
+    res.status(201).json({ id: gift._id });
+  } catch (error) {
+    console.error('Gift Error:', error);
+    res.status(500).json({ error: 'Could not create your gift — please try again' });
+  }
+});
+
+app.get('/api/gifts/:id', async (req, res) => {
+  try {
+    const gift = await Gift.findById(req.params.id).lean();
+    if (!gift) return res.status(404).json({ error: 'This gift link is invalid or expired' });
+    res.json({ gift });
+  } catch (error) {
+    res.status(404).json({ error: 'This gift link is invalid or expired' });
   }
 });
 

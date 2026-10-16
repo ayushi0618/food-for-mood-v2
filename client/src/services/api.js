@@ -79,3 +79,15 @@ export async function getInsightSummary(payload) {
     body: JSON.stringify(payload),
   });
 }
+
+// "Send a mood" gifting — public, no account needed (frictionless sharing).
+export async function createGift({ dish, price, mood, toName, fromName, note }) {
+  return request('/api/gifts', {
+    method: 'POST',
+    body: JSON.stringify({ dish, price, mood, toName, fromName, note }),
+  });
+}
+
+export async function getGift(id) {
+  return request(`/api/gifts/${id}`);
+}

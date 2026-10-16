@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Heart, Leaf, RotateCcw, ShoppingBag, Sparkles } from 'lucide-react';
+import { Check, Heart, Leaf, RotateCcw, ShoppingBag, Sparkles, Gift } from 'lucide-react';
 import foodImages from '../data/foodImages';
 import { findDish } from '../data/dishes';
 import { getNutrition } from '../data/nutrition';
@@ -11,7 +11,7 @@ import { DishName } from '../components/DishHover';
 // Recommendation result card. Note: /api/analyze already persists the dish to
 // the cart (status 'cart'), so there is no fake "add" step — the card shows
 // the honest saved state with actions to view the cart or analyze again.
-function FoodCard({ food, mood, onNew }) {
+function FoodCard({ food, mood, onNew, onGift }) {
   const [fav, setFav] = useState(() => isFavorite(food?.food || ''));
   if (!food) return null;
 
@@ -94,6 +94,15 @@ function FoodCard({ food, mood, onNew }) {
           {onNew && (
             <button className="btn btn-ghost btn-sm" onClick={onNew}>
               <RotateCcw size={15} /> Analyze another
+            </button>
+          )}
+          {onGift && catalogDish && (
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={() => onGift({ name: food.food, price: food.price }, mood?.id)}
+              style={{ borderColor: '#C2571B', color: '#C2571B' }}
+            >
+              <Gift size={15} /> Send as gift
             </button>
           )}
         </div>
