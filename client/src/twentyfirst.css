@@ -1270,3 +1270,300 @@ body::before {
   align-items: center;
   gap: 5px;
 }
+
+/* ===== MOOD RADIO — Spotify playlist (21st.dev-inspired cards) ===== */
+.song21 {
+  max-width: 860px;
+  margin: 34px auto 0;
+  padding: 26px;
+  background: linear-gradient(135deg, #211812 0%, #3A2A1E 60%, #4A382A 100%);
+  border: 1px solid rgba(217, 164, 65, 0.22);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(46, 31, 22, 0.35);
+  color: #FDF9F3;
+  animation: song21-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes song21-in {
+  from { opacity: 0; transform: translateY(26px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.song21-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.song21-icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #1DB954;
+  background: rgba(29, 185, 84, 0.14);
+  border: 1px solid rgba(29, 185, 84, 0.35);
+}
+.song21-head .eyebrow { color: #D9A441; }
+.song21-head h3 {
+  margin: 2px 0 4px;
+  font-size: 1.25rem;
+  color: #fff;
+}
+.song21-head h3 em { font-style: normal; color: #D9A441; }
+.song21-head p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #D8CBBD;
+  max-width: 520px;
+}
+.song21-head .btn { margin-left: auto; flex: none; }
+.song21-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.song-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  color: inherit;
+  font: inherit;
+  width: 100%;
+}
+.song-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(29, 185, 84, 0.5);
+}
+.song-card.is-playing { padding: 0; overflow: hidden; display: block; }
+.song-card.is-playing iframe { display: block; border: 0; border-radius: 14px; }
+.song-cover {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  color: #D9A441;
+}
+.song-cover img { width: 100%; height: 100%; object-fit: cover; }
+.song-playbtn {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 12, 8, 0.55);
+  color: #1DB954;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.song-card:hover .song-playbtn { opacity: 1; }
+.song-meta { min-width: 0; }
+.song-meta b {
+  display: block;
+  font-size: 0.86rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.song-meta i {
+  display: block;
+  font-style: normal;
+  font-size: 0.75rem;
+  color: #B9A88F;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.song21-note {
+  margin: 14px 0 0;
+  font-size: 0.75rem;
+  color: #9A8A76;
+  text-align: center;
+}
+@media (max-width: 720px) {
+  .song21-grid { grid-template-columns: 1fr 1fr; }
+  .song21 { padding: 20px; }
+  .song21-head .btn { display: none; }
+}
+
+/* ===== Swiggy-style rating badge on dish cards ===== */
+.mic21-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  background: #D9A441;
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+.mic21-rating.top { background: #5F8D4E; }
+
+/* ===== AI picks strip (Menu) ===== */
+.ai-picks { margin-bottom: 30px; }
+.ai-picks-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.ai-picks-icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+.ai-picks-head .eyebrow { display: block; margin-bottom: 2px; }
+.ai-picks-head h2 { margin: 0; font-size: 1.4rem; }
+.ai-picks-row {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 6px 2px 16px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.ai-picks-card { flex: 0 0 290px; scroll-snap-align: start; }
+
+/* ===== Cart: promo + address ===== */
+.promo-box { margin-bottom: 14px; }
+.promo-row { display: flex; gap: 8px; }
+.promo-row input {
+  flex: 1;
+  border: 1.5px dashed var(--line);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  background: var(--cream);
+  color: var(--ink);
+}
+.promo-row input:focus { outline: none; border-color: var(--terra); }
+.promo-error { color: var(--rose); font-size: 0.78rem; margin: 6px 0 0; }
+.promo-applied {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--basil-soft);
+  border: 1px solid rgba(95, 141, 78, 0.4);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.promo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: var(--basil-dark);
+}
+.promo-title { font-size: 0.8rem; color: var(--ink-soft); flex: 1; }
+.promo-applied .icon-btn { margin-left: auto; }
+
+.addr-box {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-bottom: 14px;
+}
+.addr-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+.addr-head span { display: inline-flex; align-items: center; gap: 6px; }
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--terra);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.addr-list { display: flex; flex-direction: column; gap: 8px; }
+.addr-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+.addr-opt.on { border-color: var(--terra); background: var(--terra-soft); }
+.addr-opt span { flex: 1; }
+.addr-opt b { color: var(--ink); }
+.addr-form { display: flex; flex-direction: column; gap: 8px; }
+.addr-form input {
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  background: #fff;
+  color: var(--ink);
+}
+.addr-form input:focus { outline: none; border-color: var(--terra); }
+.addr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.addr-empty { font-size: 0.82rem; color: var(--muted); margin: 0; }
+.sum-row.discount span:last-child { color: var(--basil-dark); font-weight: 800; }
+
+/* ===== 21st.dev-style offers marquee ===== */
+.marquee21 {
+  overflow: hidden;
+  white-space: nowrap;
+  background: linear-gradient(90deg, #2E1F16, #4A382A, #2E1F16);
+  border-top: 1px solid rgba(217, 164, 65, 0.25);
+  border-bottom: 1px solid rgba(217, 164, 65, 0.25);
+  padding: 10px 0;
+  margin: 0 -24px 26px;
+}
+.marquee21-track {
+  display: inline-flex;
+  gap: 42px;
+  padding-right: 42px;
+  animation: marquee21-scroll 28s linear infinite;
+}
+.marquee21:hover .marquee21-track { animation-play-state: paused; }
+@keyframes marquee21-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+.marquee21-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #F3E8D5;
+  font-size: 0.82rem;
+}
+.marquee21-item b {
+  color: #D9A441;
+  letter-spacing: 1px;
+}
+.marquee21-item svg { color: #D9A441; }

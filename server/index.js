@@ -1,6 +1,8 @@
 const {WebSocketServer } = require('ws');
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
@@ -71,6 +73,29 @@ const model = genAI.getGenerativeModel({
 
 /*
 ========================
+Menu Catalog (shared with client)
+========================
+Parsed from the client's dishes.js so Gemini always recommends a real,
+orderable dish — with a photo, price and mood tags on the client.
+*/
+let MENU = [];
+try {
+  const dishesSrc = fs.readFileSync(
+    path.join(__dirname, '..', 'client', 'src', 'data', 'dishes.js'),
+    'utf8'
+  );
+  const re = /name: '([^']*)',\s*\n\s*cuisine: '([^']*)',[\s\S]*?price: (\d+),/g;
+  let m;
+  while ((m = re.exec(dishesSrc))) {
+    MENU.push({ name: m[1], cuisine: m[2], price: Number(m[3]) });
+  }
+  console.log(`Menu catalog loaded: ${MENU.length} dishes`);
+} catch (e) {
+  console.error('Menu catalog load failed:', e.message);
+}
+
+/*
+========================
 Health Route
 ========================
 */
@@ -102,18 +127,27 @@ app.post('/api/analyze', async (req, res) => {
       });
     }
 
+    const menuList = MENU.map((d) => `${d.name} | ${d.cuisine} | Rs.${d.price}`).join('\n');
+
     const prompt = `
+    You are the AI chef of a comfort-food delivery app. A user describes
+    their situation and mood below.
+
     User situation:
     "${incident}"
 
-    Suggest ONE Indian comfort food.
+    Our menu (dish | cuisine | price):
+    ${menuList}
 
-    Return ONLY valid JSON.
+    Pick the ONE menu dish that best fits their emotional situation. Vary
+    your picks — don't always choose the most obvious comfort food.
+
+    Return ONLY valid JSON, no markdown fences:
 
     {
-      "food": "food name",
-      "reason": "short reason",
-      "price": number
+      "food": "<exact dish name from the menu>",
+      "reason": "<one warm, specific sentence on why this dish fits their mood>",
+      "price": <the menu price as a number>
     }
     `;
 
@@ -131,6 +165,15 @@ app.post('/api/analyze', async (req, res) => {
       .trim();
 
     const foodData = JSON.parse(cleanJson);
+
+    // Snap to the catalog: exact dish name + authoritative menu price.
+    const match = MENU.find(
+      (d) => d.name.toLowerCase() === String(foodData.food || '').toLowerCase()
+    );
+    if (match) {
+      foodData.food = match.name;
+      foodData.price = match.price;
+    }
 
     // Save to MongoDB
     const newOrder = new Order({
@@ -384,6 +427,63 @@ app.delete('/api/cart/:id', async (req, res) => {
 Server Start
 ========================
 */
+
+
+/*
+========================
+AI Insight Summary
+========================
+Turns the user's journal aggregates into a warm 2-3 sentence narrative
+via Gemini. Purely additive — existing routes untouched. Falls back to a
+template summary if the model is unreachable, so the client never breaks.
+*/
+
+app.post('/api/insight-summary', async (req, res) => {
+
+  try {
+
+    const { checkins, topMoods, topDishes, spend, streak } = req.body || {};
+
+    const n = Number(checkins) || 0;
+    const fallback =
+      `You've logged ${n} mood check-in${n === 1 ? '' : 's'}` +
+      `${streak ? ` on a ${streak}-day streak` : ''}` +
+      `${topMoods && topMoods.length ? `, feeling mostly ${topMoods[0]}` : ''}` +
+      `${topDishes && topDishes.length ? ` and reaching for ${topDishes[0]}` : ''}.` +
+      ` Keep the streak going — your cravings have a pattern worth following.`;
+
+    if (!n) {
+      return res.json({ summary: fallback, ai: false });
+    }
+
+    const prompt = `
+    You are a warm, witty food-and-mood coach. Write a 2-3 sentence personal
+    insight summary for a user of a comfort-food app, based on these stats.
+    Be encouraging, specific, and end with one tiny actionable suggestion.
+    No emojis. Plain text only.
+
+    Mood check-ins: ${n}
+    Day streak: ${streak || 0}
+    Top moods: ${(topMoods || []).join(', ') || 'unknown'}
+    Top dishes: ${(topDishes || []).join(', ') || 'unknown'}
+    Total spend: Rs.${spend || 0}
+    `;
+
+    const result = await model.generateContent(prompt);
+    const summary = result.response.text().trim();
+
+    res.json({ summary: summary || fallback, ai: true });
+
+  } catch (error) {
+
+    console.error('Insight Summary Error:', error);
+
+    res.json({
+      summary: 'Your patterns are still simmering — keep logging moods and this space will fill with personal insights.',
+      ai: false
+    });
+  }
+});
 
 const PORT =
   process.env.PORT || 5000;

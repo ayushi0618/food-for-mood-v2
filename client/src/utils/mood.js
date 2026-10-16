@@ -99,6 +99,8 @@ const MOODS = [
 
 export const FALLBACK_MOOD = { id: 'curious', label: 'Curious', color: '#7A6A5C' };
 
+export const MOOD_LIST = MOODS;
+
 export function detectMood(text = '') {
   const t = ` ${text.toLowerCase()} `;
   let best = null;

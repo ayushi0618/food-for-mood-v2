@@ -6,6 +6,7 @@ const KEYS = {
   FAVORITES: 'ffm:favorites:v1',
   JOURNAL: 'ffm:mood-journal:v1',
   PREFS: 'ffm:preferences:v1',
+  ADDRESSES: 'ffm:addresses:v1',
 };
 
 function read(key, fallback) {
@@ -95,4 +96,29 @@ export function getPreferences() {
 
 export function savePreferences(prefs) {
   write(KEYS.PREFS, { ...getPreferences(), ...prefs });
+}
+
+/* ---------------- Address book ----------------
+   Delivery addresses live in localStorage (no account needed).
+   { id, label, line, city, pin } */
+
+export function getAddresses() {
+  return read(KEYS.ADDRESSES, []);
+}
+
+export function saveAddress(addr) {
+  const list = getAddresses();
+  const entry = { ...addr, id: addr.id || uid() };
+  const idx = list.findIndex((a) => a.id === entry.id);
+  if (idx >= 0) list[idx] = entry;
+  else list.push(entry);
+  write(KEYS.ADDRESSES, list);
+  return entry;
+}
+
+export function deleteAddress(id) {
+  write(
+    KEYS.ADDRESSES,
+    getAddresses().filter((a) => a.id !== id)
+  );
 }
