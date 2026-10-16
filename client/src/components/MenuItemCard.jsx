@@ -3,12 +3,12 @@
 // prep time and an animated ADD button — used for the mood-results grid
 // and the Menu page. Wired into the app's cart + favorites services.
 import { useState } from 'react';
-import { Heart, ShoppingBag, Check, Clock, Users, Star } from 'lucide-react';
+import { Heart, ShoppingBag, Check, Clock, Users, Star, Gift } from 'lucide-react';
 import { isFavorite, toggleFavorite } from '../services/store';
 import { addToCart, notifyCartUpdated } from '../services/api';
 import { imgFallback } from '../utils/img';
 
-function MenuItemCard({ dish, onToast }) {
+function MenuItemCard({ dish, onToast, onGift }) {
   const [fav, setFav] = useState(() => isFavorite(dish.name));
   const [state, setState] = useState('idle'); // idle | adding | added
 
@@ -115,6 +115,16 @@ function MenuItemCard({ dish, onToast }) {
               </>
             )}
           </button>
+          {onGift && (
+            <button
+              className="mic21-gift"
+              onClick={() => onGift(dish)}
+              aria-label={`Send ${dish.name} as a gift`}
+              title="Send as a gift"
+            >
+              <Gift size={15} />
+            </button>
+          )}
         </div>
       </div>
     </article>
