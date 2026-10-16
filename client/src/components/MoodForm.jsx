@@ -8,6 +8,7 @@ import { logJournalEntry } from '../services/store';
 import { detectMood, MOOD_SUGGESTIONS } from '../utils/mood';
 import FoodCard from './FoodCard';
 import MoodPlaylist from './MoodPlaylist';
+import GiftModal from './GiftModal';
 import CameraPermissionCard from './CameraPermissionCard';
 import EmojiRating from './EmojiRating';
 import PromptBox from './PromptBox';
@@ -19,6 +20,8 @@ function MoodForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [photo, setPhoto] = useState(null);
+  const [giftDish, setGiftDish] = useState(null);
+  const [giftMood, setGiftMood] = useState(null);
 
   async function handleSubmit() {
     if (!incident.trim() || loading) return;
@@ -105,8 +108,19 @@ function MoodForm() {
               setIncident('');
               setPhoto(null);
             }}
+            onGift={(dish, moodId) => {
+              setGiftDish(dish);
+              setGiftMood(moodId);
+            }}
           />
           <MoodPlaylist moodId={mood?.id} moodLabel={mood?.label} />
+          {giftDish && (
+            <GiftModal
+              dish={giftDish}
+              moodId={giftMood}
+              onClose={() => setGiftDish(null)}
+            />
+          )}
         </>
       )}
     </section>
