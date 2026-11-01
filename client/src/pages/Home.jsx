@@ -5,6 +5,7 @@ import { ArrowRight, BarChart3, Heart, UtensilsCrossed } from 'lucide-react';
 import AnimatedHero from '../components/AnimatedHero';
 import LoginHero from '../components/LoginHero';
 import MoodForm from '../components/MoodForm';
+import MoodConveyor from '../components/MoodConveyor';
 import About from '../components/About';
 import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
@@ -37,6 +38,7 @@ function Home() {
     <>
       <AnimatedHero />
       <MoodForm />
+      <MoodConveyor onToast={(t, b) => pushToast(t, b)} />
       <About />
 
       <section className="section" style={{ paddingTop: 0 }}>

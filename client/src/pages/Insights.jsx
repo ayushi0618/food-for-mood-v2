@@ -30,6 +30,7 @@ import { getOrders, getInsightSummary } from '../services/api';
 import { getJournal, clearJournal } from '../services/store';
 import { moodColor } from '../utils/mood';
 import KpiTile from '../components/KpiTile';
+import AnalyticsBento from '../components/AnalyticsBento';
 import { DishName } from '../components/DishHover';
 
 const PIE_COLORS = ['#C2571B', '#5F8D4E', '#D9A441', '#C0495B', '#6B8CAE', '#9A8FBF'];
@@ -236,6 +237,8 @@ function Insights() {
         </div>
       ) : (
         <>
+          <AnalyticsBento journal={journal} orders={orders} />
+
           <div className="panel" style={{ marginBottom: 18 }}>
             <h3>Mood history trend</h3>
             <p className="panel-sub">Check-ins vs orders per day · last 14 days</p>
