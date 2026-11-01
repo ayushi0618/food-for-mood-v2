@@ -1,5 +1,6 @@
 // Mood analyzer section — rebuilt with 21st.dev components:
-// CameraPermissionCard (onboarding) + EmojiRating (tap-how-you-feel) +
+// CameraPermissionCard (onboarding) + EmojiRating (tap-how-you-feel,
+// text-only pills since 1 Nov 2026) +
 // PromptBox (rich AI prompt box w/ voice input + selfie upload).
 // Analysis flow, journaling, cart and toasts are unchanged.
 import { useState } from 'react';
@@ -58,12 +59,14 @@ function MoodForm() {
         <span className="eyebrow">Mood analyzer</span>
         <h2>Tell us what's happening</h2>
         <p>
-          Describe your day, tap an emoji, or just speak — Gemini reads the
+          Describe your day, tap a mood, or just speak — Gemini reads the
           emotional context and plates up one perfect comfort dish.
         </p>
       </div>
 
-      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+      {/* Full section width (was a 720px centered column) so the chat box
+          aligns with the rest of the page instead of floating in the middle. */}
+      <div>
         <CameraPermissionCard />
 
         <EmojiRating
