@@ -1722,6 +1722,8 @@ body::before {
   font-weight: 800;
   color: #111;
   margin: 0 0 20px;
+  text-align: justify;
+  text-justify: inter-word;
 }
 .belt21-legend {
   display: flex;
