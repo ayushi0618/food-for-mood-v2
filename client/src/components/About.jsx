@@ -1,4 +1,4 @@
-import { MessageSquareText, BrainCircuit, UtensilsCrossed } from 'lucide-react';
+import { MessageSquareText, BrainCircuit, UtensilsCrossed, Music2 } from 'lucide-react';
 
 const STEPS = [
   {
@@ -16,6 +16,11 @@ const STEPS = [
     title: 'Get your perfect dish',
     text: 'Receive one tailored recommendation with the reasoning, nutrition snapshot and price.',
   },
+  {
+    icon: Music2,
+    title: 'Press play on your mood',
+    text: 'Every recommendation comes with Spotify songs matched to your mood — 30-second previews play right in the browser, no login or app needed.',
+  },
 ];
 
 function About() {
@@ -23,8 +28,8 @@ function About() {
     <section className="section">
       <div className="section-head center">
         <span className="eyebrow">How it works</span>
-        <h2>From feeling to food in three steps</h2>
-        <p>A simple loop: express, analyze, enjoy — then watch your patterns in Insights.</p>
+        <h2>From feeling to food in four steps</h2>
+        <p>A simple loop: express, analyze, enjoy — with a song for the mood — then watch your patterns in Insights.</p>
       </div>
       <div className="info-grid">
         {STEPS.map((s, i) => (
