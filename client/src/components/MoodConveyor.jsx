@@ -316,7 +316,7 @@ function MoodConveyor({ onToast }) {
       <div className="belt21-hero-grid">
         <div className="belt21-copy">
           <span className="belt21-eyebrow">Food for Mood · Mood Belt</span>
-          <h2>A mood belt that keeps turning, right on the page.</h2>
+          <h2>Every mood has a plate. Yours is coming around.</h2>
           <div className="belt21-legend" aria-label="Price tiers">
             {TIERS.map((t) => (
               <span key={t.key} className="belt21-legend-item">
