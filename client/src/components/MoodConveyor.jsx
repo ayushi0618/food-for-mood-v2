@@ -186,13 +186,16 @@ function MoodConveyor({ onToast }) {
   };
 
   // Drag to scrub, flick to spin.
+  // NOTE: deliberately no setPointerCapture here — capturing the pointer to
+  // the track retargets the click event to the track, so tapping a plate
+  // would pause the belt without opening its dialog (caught live 1 Nov 2026).
+  // Dragging still works: pointermove bubbles up from the plates to the track.
   const onPointerDown = (e) => {
     draggingRef.current = true;
     dragMovedRef.current = 0;
     lastXRef.current = e.clientX;
     lastTRef.current = performance.now();
     flickRef.current = 0;
-    trackRef.current?.setPointerCapture?.(e.pointerId);
   };
   const onPointerMove = (e) => {
     if (!draggingRef.current) return;
